@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native"
 
 
-export const s = StyleSheet.create({ 
+export const s = StyleSheet.create({
 
     // HEADER
 
@@ -42,66 +42,54 @@ export const s = StyleSheet.create({
         backgroundColor: "#F4F4F4",
         marginHorizontal: 16,
         borderRadius: 18,
+        paddingTop: 30,
+        marginTop: 40
     },
 
-
-
-    section_card:{
+    wrapper: {
+        marginHorizontal: 14,
         marginVertical: 16,
-        marginHorizontal: 14
     },
 
-    lign: {
-        height: 1,
-        backgroundColor: "grey",
-        opacity: 0.5
-    },
-
-    name: {
-        alignItems: "center",
-        marginTop: 20,
-        marginBottom: 14,
-    },
-
-    username: {
-        fontSize: 24,
-        textTransform: "capitalize"
-    },
-
-    btn:{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between"
-    },
-
-    title: {
-        marginBottom: 10
+    text_info: {
+        color: "#A3A8AF",
+        marginBottom: 14
     },
 
     txt: {
-        fontSize: 21,
-        marginVertical: 8
+        fontSize: 20
     },
 
-    container_log_out:{
+    input: {
+        backgroundColor: "#FFFFFF",
+        height: 40,
+        marginTop: 10,
+        marginBottom: 30,
+        borderRadius: 5,
+        paddingHorizontal: 14
+    },
+
+    input_bio:{
+        backgroundColor: "#FFFFFF",
+        height: 130,
+        marginTop: 10,
+        marginBottom: 30,
+        borderRadius: 5,
+        paddingHorizontal: 14,
+        textAlignVertical: 'top'
+    },
+
+
+    container_avatar: {
+        position: "relative",
         alignItems: "center",
-        marginBottom: 60,
-        marginTop: 20
+        paddingTop: 60    
     },
-
-    txt_log_out:{
-        color: "#368FE6",
-        fontSize: 25,
-        marginLeft:3
-    },
-
-    btn_log_out: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        backgroundColor: "#FFD115",
-        padding: 7,
-        borderRadius: 8,
+    
+    
+    avatar: {
+        position: 'absolute',
+        bottom: 10, // La moitié de la hauteur de l'avatar
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -111,6 +99,5 @@ export const s = StyleSheet.create({
         shadowRadius: 3.84,
 
         elevation: 5,
-    }
-
-})
+    },
+ })

@@ -47,10 +47,8 @@ export const s = StyleSheet.create({
     justifyContent: "center",
   },
 
-  wrapper: {
-     
+  wrapper: { 
       width: "80%",
-      
   },
 
   input: {

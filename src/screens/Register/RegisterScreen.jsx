@@ -30,7 +30,7 @@ const RegisterScreen = ({ navigation }) => {
             return;
         }
         register(firstName, lastName, phone, email, password, confirmPassword);
-
+        
     }
 
     const backButton = (

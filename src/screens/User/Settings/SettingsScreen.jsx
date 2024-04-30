@@ -19,14 +19,13 @@ const SettingsScreen = ({ navigation }) => {
             <Settings/>
         </TouchableOpacity>
     );
-
     const BackButton = (
         <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeft/>
         </TouchableOpacity>
     );
-
     const header = (
+
         <View style={s.header}>
             {BackButton}
             <View style={s.header_texts}>
@@ -35,6 +34,9 @@ const SettingsScreen = ({ navigation }) => {
             {settingButton}
         </View>
     )
+
+
+
 
     return (
         <>
@@ -48,7 +50,7 @@ const SettingsScreen = ({ navigation }) => {
                         <View style={s.lign}></View>
                         <View style={s.section_card}>
                             <TxtInria style={s.title}>Account Settings</TxtInria>
-                            <TouchableOpacity style={s.btn}>
+                            <TouchableOpacity style={s.btn} onPress={() => navigation.navigate('Edit')}>
                                 <TxtInriaBold style={s.txt}>Edit Profile</TxtInriaBold>
                                 <ChevronRight />
                             </TouchableOpacity>
