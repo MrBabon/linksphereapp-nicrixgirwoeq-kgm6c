@@ -9,7 +9,7 @@ export const s = StyleSheet.create({
         flexDirection: "row",
         position: "absolute",
         width: "100%",
-        backgroundColor: "#368FE6",
+        backgroundColor: "#1AC1B9",
         height: 110,
         paddingTop: 60,
         paddingHorizontal: 14,
@@ -32,10 +32,10 @@ export const s = StyleSheet.create({
     // BODY
 
     container: {
-        backgroundColor: "#368FE6",
+        backgroundColor: "#1AC1B9",
         height: "auto",
         paddingTop: 110,
-        paddingBottom: 40
+        paddingBottom: 80
     },
 
     card: {

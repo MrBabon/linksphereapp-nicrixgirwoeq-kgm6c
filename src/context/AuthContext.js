@@ -3,7 +3,6 @@ import { createContext, useEffect, useState } from "react";
 import { BASE_URL } from '../config';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showMessage } from "react-native-flash-message";
-import * as FileSystem from 'expo-file-system'
 
 
 export const AuthContext = createContext();
@@ -115,21 +114,6 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(false);
         });
     }
-
-    const convertImageToBase64 = async (uri) => {
-        try {
-            const response = await fetch(uri);
-            const blob = await response.blob();
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(blob);
-            });
-        } catch (error) {
-            console.error("Error converting image to Base64:", error);
-        }
-    }
     
 
     const updateProfil = async (firstName, lastName, phone, email, job,  biography, website, linkedin, instagram, facebook, twitter, currentPassword, avatar) => {
@@ -165,8 +149,6 @@ export const AuthProvider = ({ children }) => {
             } else {
                 console.error('Le premier élément de avatar doit être une chaîne de caractères', uri);
             }
-        } else {
-            console.error('avatar doit être un tableau avec au moins un élément', avatar);
         }
         
         try {

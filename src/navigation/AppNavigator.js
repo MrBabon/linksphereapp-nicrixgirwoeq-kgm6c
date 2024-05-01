@@ -8,6 +8,7 @@ import ProfilScreen from "../screens/User/Profil/ProfilScreen.jsx";
 import SettingsScreen from "../screens/User/Settings/SettingsScreen.jsx";
 import RepertoireScreen from "../screens/User/Repertoire/RepertoireScreen.jsx";
 import EditScreen from "../screens/User/Edit/EditScreen.jsx"
+import ScanScreen from '../screens/User/Scan/ScanScreen.jsx';
 import SplashScreen from '../screens/SplashScreen.js';
 import { useContext, useRef, useState } from 'react';
 import { AuthContext } from '../context/AuthContext.js';
@@ -61,6 +62,7 @@ const AppNavigator = () => {
                                 <Stack.Screen name="Settings" component={SettingsScreen} />
                                 <Stack.Screen name="Events" component={EventIndexScreen} />
                                 <Stack.Screen name="Repertoire" component={RepertoireScreen} />
+                                <Stack.Screen name="Scan" component={ScanScreen} />
                                 <Stack.Screen name="Edit" component={EditScreen} />
                             </>
                                 ) : (

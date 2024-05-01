@@ -31,12 +31,6 @@ const ProfilScreen = ({ navigation }) => {
         </TouchableOpacity>
     );
 
-    const chatroomButton = (
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-            <Envelope/>
-        </TouchableOpacity>
-    )
-
     const header = (
         
         <View style={s.header}>
@@ -44,7 +38,6 @@ const ProfilScreen = ({ navigation }) => {
             <View style={s.header_texts}>
                 <TxtJost style={s.txtheader}>Your Account</TxtJost>
             </View>
-            {chatroomButton}
         </View>
     );
 
@@ -58,7 +51,6 @@ const ProfilScreen = ({ navigation }) => {
                             'Authorization': `${userToken}`
                         }
                     });
-                    console.log("User info from context:", userInfo.avatar_url);
                     setAvatar(response.userInfo.avatar_url);
                 } else {
                     console.error('No user info available');
@@ -74,42 +66,42 @@ const ProfilScreen = ({ navigation }) => {
     return (
         <>
             <Spinner visible={isLoading} />
-                {header} 
-                    <ScrollView>
-                        <View style={s.container_avatar}>
-                            <View style={s.avatar}>
-                                <Avatar uri={userInfo.avatar_url} />
-                            </View>
-                        </View>
-                        <View style={s.container}>
-                            <TxtInria style={s.user_name}>{userInfo.first_name} {userInfo.last_name}</TxtInria>
-                            <View style={s.user_info}>
-                                <Phone />
-                                <TxtInria style={s.info}>{userInfo.phone}</TxtInria>
-                            </View>
-                            <View style={s.user_info}>
-                                <Mail />
-                                <TxtInria style={s.info}>{userInfo.email}</TxtInria>
-                            </View>
-                            <View style={s.user_info}>
-                                <Globe />
-                                <TxtInria style={s.info}>{userInfo.website}</TxtInria>
-                            </View>
-                        </View>
-                        <View style={s.social}>
-                            <Twitter />
-                            <Linkedin />
-                            <Facebook />
-                            <Instagram />
-                        </View>
-                        <View style={s.yellow}></View>
-                        <View style={s.detail}>
-                            <TxtInriaBold style={s.job}>{userInfo.job}</TxtInriaBold>
-                            <TxtInriaLight style={s.industry}>Industry (Technology)</TxtInriaLight>
-                            <TxtInria style={s.entreprise}>Nom de l'entreprise</TxtInria>
-                            <TxtInria style={s.bio}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. FIN</TxtInria>
-                        </View>
-                    </ScrollView>
+            {header} 
+            <ScrollView>
+                <View style={s.container_avatar}>
+                    <View style={s.avatar}>
+                        <Avatar uri={userInfo.avatar_url} />
+                    </View>
+                </View>
+                <View style={s.container}>
+                    <TxtInria style={s.user_name}>{userInfo.first_name} {userInfo.last_name}</TxtInria>
+                    <View style={s.user_info}>
+                        <Phone />
+                        <TxtInria style={s.info}>{userInfo.phone}</TxtInria>
+                    </View>
+                    <View style={s.user_info}>
+                        <Mail />
+                        <TxtInria style={s.info}>{userInfo.email}</TxtInria>
+                    </View>
+                    <View style={s.user_info}>
+                        <Globe />
+                        <TxtInria style={s.info}>{userInfo.website}</TxtInria>
+                    </View>
+                </View>
+                <View style={s.social}>
+                    <Twitter />
+                    <Linkedin />
+                    <Facebook />
+                    <Instagram />
+                </View>
+                <View style={s.yellow}></View>
+                <View style={s.detail}>
+                    <TxtInriaBold style={s.job}>{userInfo.job}</TxtInriaBold>
+                    <TxtInriaLight style={s.industry}>Industry (Technology)</TxtInriaLight>
+                    <TxtInria style={s.entreprise}>Nom de l'entreprise</TxtInria>
+                    <TxtInria style={s.bio}>{userInfo.biography}</TxtInria>
+                </View>
+            </ScrollView>
             
         </>
     )

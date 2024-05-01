@@ -18,7 +18,7 @@ export const s = StyleSheet.create({
     header_texts: {
         flex: 1,
         alignItems: "center",
-        marginRight: 27
+        
     },
 
     txtheader: {
@@ -33,6 +33,6 @@ export const s = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 90
+        marginTop: 80
     },
 })

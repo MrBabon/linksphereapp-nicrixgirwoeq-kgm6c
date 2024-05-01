@@ -9,7 +9,7 @@ export const s = StyleSheet.create({
         flexDirection: "row",
         position: "absolute",
         width: "100%",
-        backgroundColor: "#368FE6",
+        backgroundColor: "#1AC1B9",
         height: 110,
         paddingTop: 60,
         paddingHorizontal: 14,
@@ -19,7 +19,7 @@ export const s = StyleSheet.create({
     header_texts: {
         flex: 1,
         alignItems: "center",
-        
+        marginRight: 27
     },
 
     txtheader: {
@@ -40,7 +40,7 @@ export const s = StyleSheet.create({
     container_avatar:{
         position: "relative",
         alignItems: "center",
-        backgroundColor: "#368FE6",
+        backgroundColor: "#1AC1B9",
         paddingTop: 170
     },
 
@@ -91,7 +91,9 @@ export const s = StyleSheet.create({
     },
 
     detail: {
-        margin: 16
+        marginHorizontal: 16,
+        marginTop: 16,
+        marginBottom: 150
     },
 
     job: {
