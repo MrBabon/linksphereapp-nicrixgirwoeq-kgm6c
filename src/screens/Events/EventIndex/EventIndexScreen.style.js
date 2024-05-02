@@ -13,7 +13,7 @@ export const s = StyleSheet.create({
         height: 110,
         paddingTop: 60,
         paddingHorizontal: 14,
-        zIndex: 2
+        zIndex: 3
     },
 
     header_texts: {
@@ -38,19 +38,19 @@ export const s = StyleSheet.create({
         width: "100%",
         backgroundColor: "#FFFFFF",
         justifyContent: "space-around",
-        zIndex: 1
+        zIndex: 2
     },
 
     navContainer: {
-        alignItems: 'center',  // Centre les éléments horizontalement
-        justifyContent: 'center',  // Centre les éléments verticalement
+        alignItems: 'center', 
+        justifyContent: 'center', 
     },
 
     underline: {
-        height: 3, // Hauteur de la ligne
-        backgroundColor: '#FCB8D9', // Couleur rose
-        width: '40%', // Largeur relative à la taille du texte
-        marginTop: 2, // Un peu d'espace entre le texte et la ligne
+        height: 3, 
+        backgroundColor: '#FCB8D9',
+        width: '40%',
+        marginTop: 2,
     },
     
     nav_txt_active: {
@@ -61,11 +61,20 @@ export const s = StyleSheet.create({
         fontSize: 18
     },
 
+
     // BODY
 
     container: {
-        marginTop: 200,
+        marginTop: 210,
         marginBottom: 130
+    },
+
+    monthHeader: {
+       backgroundColor: "#FBD160",
+       alignContent: "center",
+       textAlign: "center",
+       fontSize: 14,
+       paddingVertical: 1
     },
 
     card: {

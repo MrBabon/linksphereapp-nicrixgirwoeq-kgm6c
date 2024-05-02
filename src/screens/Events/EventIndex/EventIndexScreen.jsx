@@ -1,22 +1,24 @@
 import { s } from "./EventIndexScreen.style";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { TxtInria, TxtInriaBold } from "../../../components/TxtInria/TxtInria";
-import Envelope from "../../../assets/icons/Envelope";
 import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
-import {Container} from "../../../components/Container/Container"
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { BASE_URL } from "../../../config";
-import axios, { all } from "axios";
-import { format } from 'date-fns';
+import axios from "axios";
+import { format, parseISO } from 'date-fns';
 import CalendarEvent from "../../../assets/icons/CalendarEvent";
 import MapPin from "../../../assets/icons/MapPin";
+import { EventSearch } from "../../../components/forms/EventSearch/EventSearch";
 
 
 const EventIndexScreen = ({ navigation }) => {
     const { userInfo, userToken } = useContext(AuthContext)
-    const [events, setEvents] = useState([])
+    const [events, setEvents] = useState([]);
+    const [visible, setVisible] = useState(false);
+    
+    const toggleFilters = () => setVisible(!visible);
     const header = (
         <>
             <View style={s.header}>
@@ -34,8 +36,21 @@ const EventIndexScreen = ({ navigation }) => {
                     <TxtJost style={s.nav_txt}>My Events</TxtJost>
                 </TouchableOpacity>
             </View>
+            <EventSearch onSearch={handleSearch}/>
         </>
     )
+
+    const handleSearch = async (searchParams) => {
+        try {
+            const response = await axios.get(`${BASE_URL}events`, {
+              params: searchParams,
+              headers: { Authorization: userToken }
+            });
+            setEvents(response.data); // Assumez que la réponse contient les événements filtrés
+        } catch (error) {
+        console.error("Failed to fetch events:", error);
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,11 +66,17 @@ const EventIndexScreen = ({ navigation }) => {
                             // Assuming each date key directly contains an object with 'data' that is an array of events
                             const dayEvents = response.data[dateKey].data;
                             allEvents = [...allEvents, ...dayEvents.map(event => ({
+                                ...event.attributes,
                                 id: event.id,
-                                ...event.attributes
+                                month: format(parseISO(event.attributes.start_time), 'MMMM yyyy')
                             }))];
                         }
-                        setEvents(allEvents);
+                        const groupedEvents = allEvents.reduce((acc, event) => {
+                            acc[event.month] = acc[event.month] || [];
+                            acc[event.month].push(event);
+                            return acc;
+                        }, {});
+                        setEvents(groupedEvents);
                     })
                 }
             } catch (e) {
@@ -65,38 +86,40 @@ const EventIndexScreen = ({ navigation }) => {
         fetchData();
     }, [userInfo, userToken])
 
-    console.log(events);
     return (
         <>
             <Spinner/>
             {header}
                 <ScrollView>
                     <View style={s.container}>
-                        {events.map(event => (
-                            <>
-                                <TouchableOpacity key={event.id}>
-                                    <View style={s.card}>
-                                        <View style={s.cardImg}>
-                                            <Image source={{uri: event.logo_url}}  style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
-                                        </View>
-                                        <View style={s.cardTitle}>
-                                            <TxtJostBold>{event.title}</TxtJostBold>
-                                        </View>
-                                        <View style={s.infoContainer}>
-                                            <View style={s.cardInfo}>
-                                                <CalendarEvent />
-                                                <TxtInria>{event.city}, {event.country}</TxtInria>
+                        {Object.entries(events).map(([month, eventsOfMonth]) => (
+                            <React.Fragment key={month}>
+                                <TxtInria style={s.monthHeader}>{month}</TxtInria>
+                                {eventsOfMonth.map(event => (
+                                    <TouchableOpacity key={event.id}>
+                                        <View style={s.card}>
+                                            <View style={s.cardImg}>
+                                                <Image source={{ uri: event.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
                                             </View>
-                                            <View style={s.cardInfo}>
-                                                <MapPin/>
-                                                <TxtInria>{format(new Date(event.start_time), 'd')} to {format(new Date(event.end_time), 'd MMMM')}</TxtInria>
+                                            <View style={s.cardTitle}>
+                                                <TxtJostBold>{event.title}</TxtJostBold>
+                                            </View>
+                                            <View style={s.infoContainer}>
+                                                <View style={s.cardInfo}>
+                                                    <CalendarEvent />
+                                                    <TxtInria>{event.city}, {event.country}</TxtInria>
+                                                </View>
+                                                <View style={s.cardInfo}>
+                                                    <MapPin />
+                                                    <TxtInria>{format(parseISO(event.start_time), 'd')} to {format(parseISO(event.end_time), 'd MMMM')}</TxtInria>
+                                                </View>
                                             </View>
                                         </View>
-                                    </View>
-                                </TouchableOpacity>
-                                <View style={s.border}></View>
-                            </>
-                        ))}
+                                        <View style={s.border}></View>
+                                    </TouchableOpacity>
+                                ))}
+                        </React.Fragment>
+                    ))}
                     </View>
                 </ScrollView>
         </>
