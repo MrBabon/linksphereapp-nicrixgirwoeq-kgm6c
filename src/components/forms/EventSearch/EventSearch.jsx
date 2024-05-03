@@ -1,71 +1,95 @@
-import axios from "axios";
 import { useContext, useState } from "react"
-import { Button, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, Keyboard, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { AuthContext } from "../../../context/AuthContext";
 import { s } from "./EventSearch.style";
-import { BASE_URL } from "../../../config";
-import { TxtInria } from "../../TxtInria/TxtInria";
+import { TxtInria, TxtInriaBold } from "../../TxtInria/TxtInria";
 import Filter from "../../../assets/icons/Filter"
+import Search from "../../../assets/icons/Search";
+import * as Animatable from 'react-native-animatable';
 
 
-export const EventSearch = ({ onSearch }) => {
+export const EventSearch = ({ onSearch, onTitleSearch, setEvents }) => {
     const [country, setCountry] = useState('');
     const [region, setRegion] = useState('');
     const [city, setCity] = useState('');
     const [industry, setIndustry] = useState('');
+    const [title, setTitle] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [visible, setVisible] = useState(false);
-
     const toggleFilters = () => setVisible(!visible);
+
+    const handleOutsidePress = () => {
+        if (visible) {
+            setVisible(false);
+        }
+    };
+
+    const handleTitleSearch = () => {
+        if (title) {
+            onTitleSearch(title);
+        }  else {
+            console.log("Title is empty, resetting events.");
+            onTitleSearch('');
+        }
+    };
 
 
     return (
-        <View style={s.container}>
-            <View style={s.searchBar}>
-                <TextInput
-                    style={s.input}
-                    onChangeText={setSearchQuery}
-                    value={searchQuery}
-                    placeholder="Search Event"
-                />
-                <Button title="Search" onPress={() => onSearch(searchQuery)} />
-                <TouchableOpacity onPress={toggleFilters} style={s.toggleButton}>
-                    <Filter/>
-                </TouchableOpacity>
-            </View>
-            {visible && (
-                <View style={s.filters}>
+        <TouchableWithoutFeedback onPress={handleOutsidePress} accessible={false}>
+            <View style={s.container}>
+                <View style={s.searchBar}>
+                    <Search/>
                     <TextInput
                         style={s.input}
-                        onChangeText={setCountry}
-                        value={country}
-                        placeholder="Select Country"
+                        onChangeText={setTitle}
+                        value={title}
+                        placeholder="Search Event"
+                        onSubmitEditing={handleTitleSearch}
+                        autoCapitalize="none"
                     />
-                    <TextInput
-                        style={s.input}
-                        onChangeText={setRegion}
-                        value={region}
-                        placeholder="Select State"
-                    />
-                    <TextInput
-                        style={s.input}
-                        onChangeText={setCity}
-                        value={city}
-                        placeholder="Select City"
-                    />
-                    <TextInput
-                        style={s.input}
-                        onChangeText={setIndustry}
-                        value={industry}
-                        placeholder="Type an industry"
-                    />
-                    <Button
-                        title="Apply Filters"
-                        onPress={() => onSearch({ searchQuery, country, city, region, industry })}
-                        color="#7F95E4"
-                    />
+                    <TouchableOpacity onPress={toggleFilters} >
+                        <Filter/>
+                    </TouchableOpacity>
                 </View>
-            )}
-        </View>
+                <Animatable.View 
+                    style={s.filters}
+                    animation={visible ? 'fadeInDown' : 'fadeOutUp'}
+                    duration={300}
+                >
+                {visible && (
+                    <>
+                        
+                        <TextInput
+                            style={s.inputFilter}
+                            onChangeText={setCountry}
+                            value={country}
+                            placeholder="Select Country"
+                        />
+                        <TextInput
+                            style={s.inputFilter}
+                            onChangeText={setRegion}
+                            value={region}
+                            placeholder="Select State"
+                        />
+                        <TextInput
+                            style={s.inputFilter}
+                            onChangeText={setCity}
+                            value={city}
+                            placeholder="Select City"
+                        />
+                        <TextInput
+                            style={s.inputFilter}
+                            onChangeText={setIndustry}
+                            value={industry}
+                            placeholder="Select industry"
+                        />
+                        <TouchableOpacity onPress={() => onSearch({ searchQuery, country, city, region, industry })} style={s.btn}>
+                            <TxtInriaBold style={s.txtbtn}>Search</TxtInriaBold>
+                        </TouchableOpacity>
+                    </>
+                )}
+                </Animatable.View>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }

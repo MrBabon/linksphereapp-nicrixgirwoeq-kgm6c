@@ -2,19 +2,16 @@ import { StyleSheet } from "react-native";
 
 
 export const s = StyleSheet.create({
-    container: {
-        paddingTop: 150,
-        position: "absolute",
-        width: "100%",
-        backgroundColor: "#FFFFFF",
-        zIndex: 1
-    },
+
     searchBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
         backgroundColor: '#fff',
+        zIndex: 2
+        
     },
     input: {
         flex: 1,
@@ -23,13 +20,55 @@ export const s = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         marginRight: 10,
+        borderWidth: 0
     },
-    toggleButton: {
-        padding: 10,
-    },
+
     filters: {
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#7F95E4',
+        position: "absolute",
+        width: "100%",
+        top: 56,
+        paddingHorizontal: 10,
+        paddingTop: 30,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.45,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+        zIndex: 1
+    },
+
+    inputFilter: {
+        flex: 1,
+        height: 35,
+        borderColor: 'gray',
+        borderRadius: 6, 
         padding: 10,
+        marginHorizontal: 30,
+        
+        marginBottom: 8,
+        borderWidth: 0,
+        backgroundColor: "#F4F4F4"
+    },
+    btn: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FBD160",
+        marginHorizontal: 88,
+        marginTop: 16,
+        marginBottom: 20,
+        paddingVertical: 5,
+        borderRadius: 16,          
+        overflow: 'hidden' 
+    },
+    
+    txtbtn: {
+        color: "#FFFFFF",
+        fontSize: 24, 
     }
 })
 

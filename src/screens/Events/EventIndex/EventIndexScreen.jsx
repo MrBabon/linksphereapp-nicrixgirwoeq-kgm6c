@@ -1,5 +1,5 @@
 import { s } from "./EventIndexScreen.style";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { TxtInria, TxtInriaBold } from "../../../components/TxtInria/TxtInria";
 import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -16,41 +16,111 @@ import { EventSearch } from "../../../components/forms/EventSearch/EventSearch";
 const EventIndexScreen = ({ navigation }) => {
     const { userInfo, userToken } = useContext(AuthContext)
     const [events, setEvents] = useState([]);
-    const [visible, setVisible] = useState(false);
+    const [initialEvents, setInitialEvents] = useState([]);
+
     
-    const toggleFilters = () => setVisible(!visible);
+    const handleOutsidePress = () => {
+        if (visible) {
+            setVisible(false);
+        }
+    };
+    const onTitleSearch = (title) => {
+        if (title) {
+            const queryString = `?title=${encodeURIComponent(title)}`;
+            fetchEvents(queryString);
+        } else {
+            console.log("Title is empty, resetting to initial events.");
+
+            fetchEvents('');
+        }
+    };
+    
+    const fetchEvents = async (queryString) => {
+        try {
+            const response = await axios.get(`${BASE_URL}events${queryString}`, {
+              headers: { Authorization: userToken }
+            });
+            let allEvents = [];
+            for (const dateKey in response.data) {
+                const dayEvents = response.data[dateKey].data;
+                allEvents = [...allEvents, ...dayEvents.map(event => ({
+                    ...event.attributes,
+                    id: event.id,
+                    month: format(parseISO(event.attributes.start_time), 'MMMM yyyy')
+                }))];
+            }
+            const groupedEvents = allEvents.reduce((acc, event) => {
+                acc[event.month] = acc[event.month] || [];
+                acc[event.month].push(event);
+                return acc;
+            }, {});
+            setEvents(groupedEvents);
+        } catch (error) {
+            console.error("Failed to fetch events by title:", error);
+        }
+    };  
+    const handleSearch = async (query) => {
+        console.log(query);
+        let queryString = '';
+
+            queryString = Object.keys(query)
+                .filter(key => query[key]) // Filtrer les clés qui n'ont pas de valeur vide
+                .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
+                .join('&');
+    
+            if (queryString) {
+                queryString = `?${queryString}`;
+            }
+        
+        console.log(queryString);
+        try {
+            const response = await axios.get(`${BASE_URL}events${queryString}`, {
+              headers: { Authorization: userToken }
+            });
+            let allEvents = [];
+            for (const dateKey in response.data) {
+                const dayEvents = response.data[dateKey].data;
+                allEvents = [...allEvents, ...dayEvents.map(event => ({
+                    ...event.attributes,
+                    id: event.id,
+                    month: format(parseISO(event.attributes.start_time), 'MMMM yyyy')
+                }))];
+            }
+            const groupedEvents = allEvents.reduce((acc, event) => {
+                acc[event.month] = acc[event.month] || [];
+                acc[event.month].push(event);
+                return acc;
+            }, {});
+            setEvents(groupedEvents); // Assumez que la réponse contient les événements filtrés
+        } catch (error) {
+        console.error("Failed to fetch events:", error);
+        }
+    }
+    
     const header = (
-        <>
+        <View style={s.container_header}>
             <View style={s.header}>
                 <View style={s.header_texts}>
                     <TxtJost style={s.txtheader}>Events</TxtJost>
                 </View>
             </View>
-            <View style={s.header_nav}>
-                <TouchableOpacity style={s.navContainer}>
-                    <TxtJostBold style={s.nav_txt_active}>All Upcoming Events</TxtJostBold>
-                    <View style={s.underline}></View>
-
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <TxtJost style={s.nav_txt}>My Events</TxtJost>
-                </TouchableOpacity>
+            <View>
+                <View style={s.header_nav}>
+                    <TouchableOpacity style={s.navContainer}>
+                        <TxtJostBold style={s.nav_txt_active}>All Upcoming Events</TxtJostBold>
+                        <View style={s.underline}></View>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <TxtJost style={s.nav_txt}>My Events</TxtJost>
+                    </TouchableOpacity>
+                </View>
+                <TouchableWithoutFeedback onPress={handleOutsidePress} accessible={false}>
+                    <EventSearch onSearch={handleSearch} onTitleSearch={onTitleSearch} setEvents={setInitialEvents}/>
+                </TouchableWithoutFeedback>
             </View>
-            <EventSearch onSearch={handleSearch}/>
-        </>
+        </View>
     )
 
-    const handleSearch = async (searchParams) => {
-        try {
-            const response = await axios.get(`${BASE_URL}events`, {
-              params: searchParams,
-              headers: { Authorization: userToken }
-            });
-            setEvents(response.data); // Assumez que la réponse contient les événements filtrés
-        } catch (error) {
-        console.error("Failed to fetch events:", error);
-        }
-    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -77,6 +147,7 @@ const EventIndexScreen = ({ navigation }) => {
                             return acc;
                         }, {});
                         setEvents(groupedEvents);
+                        setInitialEvents(groupedEvents);
                     })
                 }
             } catch (e) {
@@ -90,13 +161,14 @@ const EventIndexScreen = ({ navigation }) => {
         <>
             <Spinner/>
             {header}
+            <View style={{flex: 1}}>
                 <ScrollView>
                     <View style={s.container}>
                         {Object.entries(events).map(([month, eventsOfMonth]) => (
                             <React.Fragment key={month}>
                                 <TxtInria style={s.monthHeader}>{month}</TxtInria>
                                 {eventsOfMonth.map(event => (
-                                    <TouchableOpacity key={event.id}>
+                                    <TouchableOpacity key={event.id} onPress={() => navigation.navigate('Event', { eventId: event.id })}>
                                         <View style={s.card}>
                                             <View style={s.cardImg}>
                                                 <Image source={{ uri: event.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
@@ -121,7 +193,8 @@ const EventIndexScreen = ({ navigation }) => {
                         </React.Fragment>
                     ))}
                     </View>
-                </ScrollView>
+                </ScrollView>   
+            </View>
         </>
     )
 }

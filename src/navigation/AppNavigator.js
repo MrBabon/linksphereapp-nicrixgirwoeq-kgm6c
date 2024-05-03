@@ -4,6 +4,7 @@ import  HomeScreen  from '../screens/Home/HomeScreen.jsx';
 import  LoginScreen  from "../screens/Login/LoginScreen.jsx";
 import  RegisterScreen  from "../screens/Register/RegisterScreen.jsx";
 import EventIndexScreen from "../screens/Events/EventIndex/EventIndexScreen.jsx";
+import EventShowScreen from "../screens/Events/EventShow/EventShowScreen.jsx";
 import ProfilScreen from "../screens/User/Profil/ProfilScreen.jsx";
 import SettingsScreen from "../screens/User/Settings/SettingsScreen.jsx";
 import RepertoireScreen from "../screens/User/Repertoire/RepertoireScreen.jsx";
@@ -61,6 +62,7 @@ const AppNavigator = () => {
                                 <Stack.Screen name="Profil" component={ProfilScreen} />
                                 <Stack.Screen name="Settings" component={SettingsScreen} />
                                 <Stack.Screen name="Events" component={EventIndexScreen} />
+                                <Stack.Screen name="Event" component={EventShowScreen} />
                                 <Stack.Screen name="Repertoire" component={RepertoireScreen} />
                                 <Stack.Screen name="Scan" component={ScanScreen} />
                                 <Stack.Screen name="Edit" component={EditScreen} />
