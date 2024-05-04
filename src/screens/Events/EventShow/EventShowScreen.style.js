@@ -64,5 +64,82 @@ export const s = StyleSheet.create({
 
 
     // BODY
+    card: {
+        padding: 10,
+        
+    },
+
+    cardImg: {
+        alignItems: "center"
+    },
+
+    logo: {
+        width: "100%",
+        maxWidth: 230,
+        height: 130,
+        resizeMode: 'contain',
+    },
+
+    cardTitle: {
+        alignItems: "center",
+        paddingVertical: 10
+    },
+
+    infoContainer: {
+        width: "100%",
+        maxWidth: 440,
+        alignSelf: 'center',
+        marginHorizontal: "auto",
+    },
+
+    cardInfo: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginHorizontal: "auto",
+        justifyContent: "center"
+    },
+
+    cardLink: {
+        flexDirection: "row",
+        justifyContent: "center",
+        marginVertical: 16,
+    },
+
+    txtLink: {
+        fontSize: 16,
+        marginLeft: 4
+    },
+    cardDescription: {
+        margin: 4
+    },
+
+    viewbtn: {
+        marginHorizontal: 110
+    },
+
+    btn: {
+        marginBottom: 170,
+        marginTop: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#FBD160",
+        borderRadius: 16,
+        paddingVertical: 4,         
+        
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.35,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    },
+
+    txtbtn: {
+        textTransform: "uppercase",
+        color: "#1AC1B9"
+    }
 
 })

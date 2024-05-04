@@ -3,10 +3,14 @@ import { s } from "./EventShowScreen.style";
 import { useContext, useEffect, useState } from "react";
 import { BASE_URL } from "../../../config";
 import { AuthContext } from "../../../context/AuthContext";
-import { TxtInria } from "../../../components/TxtInria/TxtInria";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { TxtInria, TxtInriaBold } from "../../../components/TxtInria/TxtInria";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { Container } from "../../../components/Container/Container";
-import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
+import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJost/TxtJost";
+import CalendarEvent from "../../../assets/icons/CalendarEvent";
+import MapPin from "../../../assets/icons/MapPin";
+import { format, parseISO } from "date-fns";
+import Globe from "../../../assets/icons/Globe";
 
 const EventShowScreen = ({ route, navigation }) => {
     const { eventId } = route.params;
@@ -16,7 +20,7 @@ const EventShowScreen = ({ route, navigation }) => {
     useEffect(() => {
         const fetchEvent = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/events/${eventId}`, {
+                const response = await axios.get(`${BASE_URL}events/${eventId}`, {
                     header: { Authorization: userToken }
                 });
                 const data = response.data.data
@@ -58,9 +62,35 @@ const EventShowScreen = ({ route, navigation }) => {
         <>
             {header}
                 <ScrollView>
-                    <View>
-                        <TxtInria>{event.title}</TxtInria>
-                        <TxtInria>TEXT</TxtInria>
+                    <View style={s.card}>
+                        <View style={s.cardImg}>
+                            <Image source={{ uri: event.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)}/>
+                        </View>
+                        <View style={s.cardTitle}>
+                            <TxtJostBold>{event.title}</TxtJostBold>
+                        </View>
+                        <View style={s.infoContainer}>
+                            <View style={s.cardInfo}>
+                                <CalendarEvent />
+                                <TxtInria>{event.city}, {event.country}</TxtInria>
+                            </View>
+                            <View style={s.cardInfo}>
+                                <MapPin />
+                                <TxtInria>{format(parseISO(event.start_time), 'd')} to {format(parseISO(event.end_time), 'd MMMM')}</TxtInria>
+                            </View>
+                        </View>
+                        <View style={s.cardLink}>
+                            <Globe />
+                            <TxtInriaBold style={s.txtLink}>{event.link}</TxtInriaBold>
+                        </View>
+                        <View style={s.cardDescription}>
+                            <TxtInria>{event.description}</TxtInria>
+                        </View>
+                    </View>
+                    <View style={s.viewbtn}>
+                        <TouchableOpacity style={s.btn}>
+                            <TxtJostSemiBold style={s.txtbtn}>Register</TxtJostSemiBold>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>
 
