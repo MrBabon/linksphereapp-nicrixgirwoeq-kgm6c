@@ -89,9 +89,10 @@ export const s = StyleSheet.create({
 
     logo: {
         width: "100%",
-        maxWidth: 200,
+        maxWidth: 90,
         height: 90,
-        resizeMode: 'contain',
+        borderRadius: 12,
+        // resizeMode: 'contain',
     },
 
     cardTitle: {

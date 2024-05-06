@@ -5,6 +5,7 @@ import JostBold from "./src/assets/fonts/Jost/Jost-Bold.ttf";
 import InriaBold from "./src/assets/fonts/Inria/InriaSans-Bold.ttf";
 import InriaSansRegular from "./src/assets/fonts/Inria/InriaSans-Regular.ttf";
 import InriaLight from "./src/assets/fonts/Inria/InriaSans-Light.ttf";
+import InriaItalic from "./src/assets/fonts/Inria/InriaSans-Italic.ttf";
 import { useFonts } from "expo-font";
 // ************
 
@@ -20,6 +21,7 @@ export default function App() {
   const [isFontLoaded] = useFonts({
     "InriaLight": InriaLight,
     "InriaSansRegular": InriaSansRegular,
+    "InriaItalic": InriaItalic,
     "Inria-bold": InriaBold,
     "Jost": Jost,
     "Jost-semibold": JostSemiBold,
@@ -33,7 +35,7 @@ export default function App() {
 
   return (
     <AuthProvider>
-        <StatusBar backgroundColor="#368FE6" />
+        <StatusBar backgroundColor="#1AC1B9" />
           <AppNavigator/>
         <FlashMessage position="top" />
     </AuthProvider>

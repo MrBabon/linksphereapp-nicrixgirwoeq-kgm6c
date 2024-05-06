@@ -23,7 +23,7 @@ export const s = StyleSheet.create({
     header_texts: {
         flex: 1,
         alignItems: "center",
-        
+        marginRight: 27
     },
 
     txtheader: {
@@ -39,6 +39,7 @@ export const s = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#FFFFFF",
         justifyContent: "space-around",
+        paddingBottom: 10,
         zIndex: 2
     },
 
@@ -75,9 +76,10 @@ export const s = StyleSheet.create({
 
     logo: {
         width: "100%",
-        maxWidth: 230,
-        height: 130,
-        resizeMode: 'contain',
+        maxWidth: 110,
+        height: 110,
+        borderRadius: 12,
+
     },
 
     cardTitle: {
@@ -110,11 +112,17 @@ export const s = StyleSheet.create({
         marginLeft: 4
     },
     cardDescription: {
-        margin: 4
+        margin: 4,
+    },
+    
+    txtdescription: {
+        fontSize: 18
+
     },
 
     viewbtn: {
-        marginHorizontal: 110
+        marginHorizontal: 110,
+        marginBottom: 140
     },
 
     btn: {
@@ -140,6 +148,104 @@ export const s = StyleSheet.create({
     txtbtn: {
         textTransform: "uppercase",
         color: "#1AC1B9"
-    }
+    },
 
+    // MODAL
+
+    logoModal: {
+        width: "100%",
+        maxWidth: 90,
+        height: 90,
+        borderRadius: 12,
+        marginTop: 8
+    },
+
+    confirmModal: {
+        color: "#FFFFFF",
+        fontSize: 14,
+        textAlign: "center",
+        marginHorizontal: 50,
+        marginVertical: 16,
+    },
+
+    txtinfo: {
+        color: "#FFFFFF",
+        fontSize: 14
+    },
+    wraper: {
+        width: "70%",
+        marginVertical: 25
+    },
+    input: {
+        backgroundColor: "#F2F1F1",
+        height: 40,
+        borderRadius: 7,
+        textAlign: "center",
+        fontSize: 16,
+        fontFamily: "InriaSansRegular",
+        
+    },
+
+    infoAcces: {
+        paddingHorizontal: 1
+    },
+
+    infoTxt: {
+        color: "#FFFFFF"
+    },
+
+    infoQuestion: {
+        color: "#FFFFFF",
+        marginTop: 10
+    },
+
+    link: {
+        flexDirection: "row",
+    },
+    linkTxt: {
+        color: "#FBD160"
+    },
+
+    ligne: {
+        height: 1,
+        width: "50%",
+        backgroundColor: "#F9447F",
+        marginVertical: 20,
+        
+    },
+    checkboxView: {
+        flexDirection: "row",
+        marginHorizontal: 8
+    },
+    checkbox: {
+        width: 14,
+        height: 14,
+        borderColor: "#FFFFFF"
+    },
+
+    viewBtn: {
+        marginTop: 25
+    },
+
+    btnConfirm: {
+        backgroundColor: "#FBD160",
+        paddingHorizontal: 16,
+        paddingVertical: 5,
+        borderRadius: 22,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.35,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    },
+
+    btntxt: {
+        fontSize: 16,
+        textTransform: "uppercase",
+        color: "#1AC1B9"
+    },
 })

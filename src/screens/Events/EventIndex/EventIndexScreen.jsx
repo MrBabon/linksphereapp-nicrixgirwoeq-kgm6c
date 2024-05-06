@@ -178,12 +178,12 @@ const EventIndexScreen = ({ navigation }) => {
                                             </View>
                                             <View style={s.infoContainer}>
                                                 <View style={s.cardInfo}>
-                                                    <CalendarEvent />
+                                                    <MapPin />
                                                     <TxtInria>{event.city}, {event.country}</TxtInria>
                                                 </View>
                                                 <View style={s.cardInfo}>
-                                                    <MapPin />
-                                                    <TxtInria>{format(parseISO(event.start_time), 'd')} to {format(parseISO(event.end_time), 'd MMMM')}</TxtInria>
+                                                    <CalendarEvent />
+                                                    <TxtInria>{format(parseISO(event.start_time), 'MMMM d')} to {format(parseISO(event.end_time), 'd')}</TxtInria>
                                                 </View>
                                             </View>
                                         </View>
