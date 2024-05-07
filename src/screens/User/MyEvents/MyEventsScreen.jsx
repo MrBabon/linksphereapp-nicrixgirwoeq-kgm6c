@@ -1,43 +1,43 @@
-import { s } from "./EventIndexScreen.style";
-import { Image, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { TxtInria, TxtInriaBold } from "../../../components/TxtInria/TxtInria";
-import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
-import Spinner from "react-native-loading-spinner-overlay";
+import { s } from "./MyEventsScreen.style";
+import { EventSearch } from "../../../components/forms/EventSearch/EventSearch"
+import { ScrollView, TouchableOpacity, TouchableWithoutFeedback, View, Image } from "react-native";
+import { TxtInria } from "../../../components/TxtInria/TxtInria";
+import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJost/TxtJost";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { BASE_URL } from "../../../config";
+import Spinner from "react-native-loading-spinner-overlay";
 import axios from "axios";
-import { format, parseISO } from 'date-fns';
-import CalendarEvent from "../../../assets/icons/CalendarEvent";
-import MapPin from "../../../assets/icons/MapPin";
-import { EventSearch } from "../../../components/forms/EventSearch/EventSearch";
+import { BASE_URL } from "../../../config";
+import { format, parseISO } from "date-fns";
+import  MapPin from "../../../assets/icons/MapPin"
+import CalendarEvent from "../../../assets/icons/CalendarEvent"
 
-
-const EventIndexScreen = ({ navigation }) => {
-    const { userInfo, userToken } = useContext(AuthContext)
+const MyEventsScreen = ({ navigation }) => {
+    const { userInfo, userToken } = useContext(AuthContext);
     const [events, setEvents] = useState([]);
     const [initialEvents, setInitialEvents] = useState([]);
 
-    
+
     const handleOutsidePress = () => {
         if (visible) {
             setVisible(false);
         }
     };
+
     const onTitleSearch = (title) => {
         if (title) {
             const queryString = `?title=${encodeURIComponent(title)}`;
-            fetchEvents(queryString);
+            fetchMyEvents(queryString);
         } else {
             console.log("Title is empty, resetting to initial events.");
 
-            fetchEvents('');
+            fetchMyEvents('');
         }
     };
-    
-    const fetchEvents = async (queryString) => {
+
+    const fetchMyEvents = async (queryString) => {
         try {
-            const response = await axios.get(`${BASE_URL}events${queryString}`, {
+            const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events${queryString}`, {
               headers: { Authorization: userToken }
             });
             let allEvents = [];
@@ -58,7 +58,8 @@ const EventIndexScreen = ({ navigation }) => {
         } catch (error) {
             console.error("Failed to fetch events by title:", error);
         }
-    };  
+    }
+
     const handleSearch = async (query) => {
         console.log(query);
         let queryString = '';
@@ -74,7 +75,7 @@ const EventIndexScreen = ({ navigation }) => {
         
         console.log(queryString);
         try {
-            const response = await axios.get(`${BASE_URL}events${queryString}`, {
+            const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events${queryString}`, {
               headers: { Authorization: userToken }
             });
             let allEvents = [];
@@ -96,7 +97,7 @@ const EventIndexScreen = ({ navigation }) => {
         console.error("Failed to fetch events:", error);
         }
     }
-    
+
     const header = (
         <View style={s.container_header}>
             <View style={s.header}>
@@ -106,12 +107,12 @@ const EventIndexScreen = ({ navigation }) => {
             </View>
             <View>
                 <View style={s.header_nav}>
-                    <TouchableOpacity style={s.navContainer}>
-                        <TxtJostBold style={s.nav_txt_active}>All Upcoming Events</TxtJostBold>
-                        <View style={s.underline}></View>
+                    <TouchableOpacity  onPress={() => navigation.navigate('Events')}>
+                        <TxtJost style={s.nav_txt}>All Upcoming Events</TxtJost>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('MyEvents')}>
-                        <TxtJost style={s.nav_txt}>My Events</TxtJost>
+                    <TouchableOpacity style={s.navContainer} onPress={() => navigation.navigate('MyEvents')}>
+                        <TxtJostBold style={s.nav_txt_active}>My Events</TxtJostBold>
+                        <View style={s.underline}></View>
                     </TouchableOpacity>
                 </View>
                 <TouchableWithoutFeedback onPress={handleOutsidePress} accessible={false}>
@@ -120,43 +121,50 @@ const EventIndexScreen = ({ navigation }) => {
             </View>
         </View>
     )
-
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}events`, {
+                    const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events`, {
                         headers: {
                             'Authorization': userToken
                         }
-                    }).then(response => {
-                        let allEvents = [];
-                        for (const dateKey in response.data) {
-                            // Assuming each date key directly contains an object with 'data' that is an array of events
-                            const dayEvents = response.data[dateKey].data;
-                            allEvents = [...allEvents, ...dayEvents.map(event => ({
-                                ...event.attributes,
-                                id: event.id,
-                                month: format(parseISO(event.attributes.start_time), 'MMMM yyyy')
-                            }))];
-                        }
-                        const groupedEvents = allEvents.reduce((acc, event) => {
-                            acc[event.month] = acc[event.month] || [];
-                            acc[event.month].push(event);
-                            return acc;
-                        }, {});
-                        setEvents(groupedEvents);
-                        setInitialEvents(groupedEvents);
                     })
+                const eventsData = response.data.events;
+
+                const allEvents = [];
+
+                for (const monthKey in eventsData) {
+                    // Obtenir le tableau d'événements pour chaque mois
+                    const eventsInMonth = eventsData[monthKey];
+                    if (Array.isArray(eventsInMonth)) {
+                        allEvents.push(...eventsInMonth.map(event => ({
+                            ...event.data.attributes,
+                            id: event.data.id,
+                            month: format(parseISO(event.data.attributes.start_time), 'MMMM yyyy')
+                        })));
+                    } else {
+                        console.warn(`La clé ${monthKey} ne contient pas un tableau d'événements :`, eventsInMonth);
+                    }
                 }
-            } catch (e) {
-                console.log(e);
+
+                // Grouper les événements par mois
+                const groupedEvents = allEvents.reduce((acc, event) => {
+                    acc[event.month] = acc[event.month] || [];
+                    acc[event.month].push(event);
+                    return acc;
+                }, {});
+
+                setEvents(groupedEvents);
+                setInitialEvents(groupedEvents);
             }
+        } catch (e) {
+            console.error('Erreur lors de la récupération des événements:', e);
+        }
         };
         fetchData();
     }, [userInfo, userToken])
-
+    // console.log(events);
     return (
         <>
             <Spinner/>
@@ -168,35 +176,41 @@ const EventIndexScreen = ({ navigation }) => {
                             <React.Fragment key={month}>
                                 <TxtInria style={s.monthHeader}>{month}</TxtInria>
                                 {eventsOfMonth.map(event => (
-                                    <TouchableOpacity key={event.id} onPress={() => navigation.navigate('Event', { eventId: event.id })}>
+                                    <TouchableOpacity key={event.id}>
                                         <View style={s.card}>
-                                            <View style={s.cardImg}>
-                                                <Image source={{ uri: event.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
-                                            </View>
                                             <View style={s.cardTitle}>
-                                                <TxtJostBold>{event.title}</TxtJostBold>
+                                                <TxtJostBold style={s.txtTitle}>{event.title}</TxtJostBold>
                                             </View>
-                                            <View style={s.infoContainer}>
-                                                <View style={s.cardInfo}>
-                                                    <MapPin />
-                                                    <TxtInria>{event.city}, {event.country}</TxtInria>
+                                            <View style={s.cardContainer}>
+                                                <View style={s.cardImg}>
+                                                    <Image source={{ uri: event.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)}/>
                                                 </View>
-                                                <View style={s.cardInfo}>
-                                                    <CalendarEvent />
-                                                    <TxtInria>{format(parseISO(event.start_time), 'MMMM d')} to {format(parseISO(event.end_time), 'd')}</TxtInria>
+                                                <View style={s.infoContainer}>
+                                                    <View style={s.cardInfo}>
+                                                        <MapPin />
+                                                        <TxtInria style={s.cardInfoTxt}>{event.city}, {event.country}</TxtInria>
+                                                    </View>
+                                                    <View style={s.cardInfo}>
+                                                        <CalendarEvent />
+                                                        <TxtInria style={s.cardInfoTxt}>{format(parseISO(event.start_time), 'MMMM d')} to {format(parseISO(event.end_time), 'd')}</TxtInria>
+                                                    </View>
                                                 </View>
                                             </View>
+                                            <TouchableOpacity style={s.btn}>
+                                                <TxtJostSemiBold style={s.btnTxt}>Exhibitors & Visitors listing</TxtJostSemiBold>
+                                            </TouchableOpacity>
                                         </View>
                                         <View style={s.border}></View>
                                     </TouchableOpacity>
                                 ))}
-                        </React.Fragment>
-                    ))}
+                            </React.Fragment>
+                        ))}
                     </View>
-                </ScrollView>   
+                </ScrollView>
             </View>
         </>
     )
 }
 
-export default EventIndexScreen;
+
+export default MyEventsScreen

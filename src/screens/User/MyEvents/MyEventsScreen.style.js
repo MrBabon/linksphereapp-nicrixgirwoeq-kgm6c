@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 
 
 export const s = StyleSheet.create({
-
     // HEADER
 
     container_header: {
@@ -23,7 +22,6 @@ export const s = StyleSheet.create({
     header_texts: {
         flex: 1,
         alignItems: "center",
-        
     },
 
     txtheader: {
@@ -39,6 +37,7 @@ export const s = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#FFFFFF",
         justifyContent: "space-around",
+        paddingBottom: 10,
         zIndex: 2
     },
 
@@ -62,7 +61,6 @@ export const s = StyleSheet.create({
         fontSize: 18
     },
 
-
     // BODY
 
     container: {
@@ -71,32 +69,35 @@ export const s = StyleSheet.create({
     },
 
     monthHeader: {
-       backgroundColor: "#FBD160",
-       alignContent: "center",
-       textAlign: "center",
-       fontSize: 14,
-       paddingVertical: 1
-    },
+        backgroundColor: "#FBD160",
+        alignContent: "center",
+        textAlign: "center",
+        fontSize: 14,
+        paddingVertical: 1
+        },
 
     card: {
-        padding: 20,
-        
+        padding: 20,  
+    },
+
+    txtTitle: {
+        textAlign: "center",
+        fontSize: 18
+    },
+    cardContainer: {
+        flexDirection: "row",
+        marginTop: 10
     },
 
     cardImg: {
-        alignItems: "center"
+        width: 80
     },
 
     logo: {
         width: "100%",
         maxWidth: 90,
-        height: 90,
+        height: 80,
         borderRadius: 12,
-    },
-
-    cardTitle: {
-        alignItems: "center",
-        paddingVertical: 10
     },
 
     infoContainer: {
@@ -109,12 +110,37 @@ export const s = StyleSheet.create({
     cardInfo: {
         flexDirection: "row",
         alignItems: "center",
-        marginHorizontal: "auto",
-        justifyContent: "center"
+        marginLeft: 10,
+    },
+
+    cardInfoTxt: {
+        fontSize: 16
+    },
+
+    btn: {
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 18,
+        marginHorizontal: 35,
+        backgroundColor: "#fcb8d930",
+        borderWidth: 0.3,
+        borderColor: "#F9447F",
+        borderRadius: 12, // Assurez-vous que la bordure est arrondie
+        overflow: "hidden" 
+    },
+
+
+    btnTxt: {
+        color: "#F9447F",
+        fontSize: 16,
+        paddingHorizontal: 14,
+        paddingVertical: 3,
+        borderRadius: 20,
     },
 
     border: {
+        marginTop: 3,
         height: 1,
-        backgroundColor: "#cccccc80"
+        backgroundColor: "#FBD160"
     }
 })

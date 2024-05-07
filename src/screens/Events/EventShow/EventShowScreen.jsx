@@ -5,7 +5,7 @@ import { BASE_URL } from "../../../config";
 import { AuthContext } from "../../../context/AuthContext";
 import { TxtInria, TxtInriaBold, TxtInriaItalic } from "../../../components/TxtInria/TxtInria";
 import { Image, ScrollView, TextInput, TouchableOpacity, View, Linking, Switch } from "react-native";
-import { Container } from "../../../components/Container/Container";
+import { showMessage } from "react-native-flash-message";
 import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJost/TxtJost";
 import CalendarEvent from "../../../assets/icons/CalendarEvent";
 import MapPin from "../../../assets/icons/MapPin";
@@ -70,12 +70,18 @@ const EventShowScreen = ({ route, navigation }) => {
                 headers: { Authorization: userToken }
             });
             if (response.status === 201) {
-                console.log('Participation recorded successfully');
+                showMessage({
+                    message: "Participation recorded successfully",
+                    type: "success",
+                    duration: 4000
+                });
             } else {
                 console.error('Failed to record participation');
             }
+            setModalVisible(false)
         } catch (e) {
             console.error('Error submitting participation:', e);
+            setModalVisible(false)
         }
     };
     const toggleCheckbox = () => {
@@ -104,7 +110,7 @@ const EventShowScreen = ({ route, navigation }) => {
                         <TxtJostBold style={s.nav_txt_active}>All Upcoming Events</TxtJostBold>
                         <View style={s.underline}></View>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('MyEvents')}>
                         <TxtJost style={s.nav_txt}>My Events</TxtJost>
                     </TouchableOpacity>
                 </View>
@@ -166,7 +172,6 @@ const EventShowScreen = ({ route, navigation }) => {
                             style={s.input}
                             placeholder="REGISTRATION CODE"
                             placeholderTextColor="#ccc"
-                            value={registrationCode}
                             onChangeText={handleTextChange} />
                     </View>
                     <View style={s.infoAcces}>
