@@ -150,6 +150,54 @@ export const s = StyleSheet.create({
         color: "#1AC1B9"
     },
 
+    containerBtn: {
+        marginBottom: 300,
+    },
+
+    viewBtnParticipation: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        paddingHorizontal: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.35,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    },
+
+    btnParticipation: {
+        width: "45%",
+        marginTop: 10,
+        backgroundColor: "#7F95E4",
+        paddingVertical: 3,
+        alignItems: "center",
+        borderRadius: 5,
+        
+    },
+
+    btnTxtParticipation: {
+        fontSize: 16,
+        color: "#FFFFFF"
+    },
+
+    viewUnsubscribe: {
+        marginTop: 16,
+        alignItems: "center"
+    },
+
+    txtItalic: {
+        fontSize: 13
+    },
+
+    btnUnsubscribe: {
+        textTransform: "uppercase",
+        color: "#1AC1B9",
+        fontSize: 16
+    },
     // MODAL
 
     logoModal: {

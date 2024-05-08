@@ -40,15 +40,23 @@ const MyEventsScreen = ({ navigation }) => {
             const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events${queryString}`, {
               headers: { Authorization: userToken }
             });
-            let allEvents = [];
-            for (const dateKey in response.data) {
-                const dayEvents = response.data[dateKey].data;
-                allEvents = [...allEvents, ...dayEvents.map(event => ({
-                    ...event.attributes,
-                    id: event.id,
-                    month: format(parseISO(event.attributes.start_time), 'MMMM yyyy')
-                }))];
-            }
+            const eventsData = response.data.events;
+
+                const allEvents = [];
+
+                for (const monthKey in eventsData) {
+                    // Obtenir le tableau d'événements pour chaque mois
+                    const eventsInMonth = eventsData[monthKey];
+                    if (Array.isArray(eventsInMonth)) {
+                        allEvents.push(...eventsInMonth.map(event => ({
+                            ...event.data.attributes,
+                            id: event.data.id,
+                            month: format(parseISO(event.data.attributes.start_time), 'MMMM yyyy')
+                        })));
+                    } else {
+                        console.warn(`La clé ${monthKey} ne contient pas un tableau d'événements :`, eventsInMonth);
+                    }
+                }
             const groupedEvents = allEvents.reduce((acc, event) => {
                 acc[event.month] = acc[event.month] || [];
                 acc[event.month].push(event);
@@ -61,7 +69,6 @@ const MyEventsScreen = ({ navigation }) => {
     }
 
     const handleSearch = async (query) => {
-        console.log(query);
         let queryString = '';
 
             queryString = Object.keys(query)
@@ -73,20 +80,27 @@ const MyEventsScreen = ({ navigation }) => {
                 queryString = `?${queryString}`;
             }
         
-        console.log(queryString);
         try {
             const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events${queryString}`, {
               headers: { Authorization: userToken }
             });
-            let allEvents = [];
-            for (const dateKey in response.data) {
-                const dayEvents = response.data[dateKey].data;
-                allEvents = [...allEvents, ...dayEvents.map(event => ({
-                    ...event.attributes,
-                    id: event.id,
-                    month: format(parseISO(event.attributes.start_time), 'MMMM yyyy')
-                }))];
-            }
+            const eventsData = response.data.events;
+
+                const allEvents = [];
+
+                for (const monthKey in eventsData) {
+                    // Obtenir le tableau d'événements pour chaque mois
+                    const eventsInMonth = eventsData[monthKey];
+                    if (Array.isArray(eventsInMonth)) {
+                        allEvents.push(...eventsInMonth.map(event => ({
+                            ...event.data.attributes,
+                            id: event.data.id,
+                            month: format(parseISO(event.data.attributes.start_time), 'MMMM yyyy')
+                        })));
+                    } else {
+                        console.warn(`La clé ${monthKey} ne contient pas un tableau d'événements :`, eventsInMonth);
+                    }
+                }
             const groupedEvents = allEvents.reduce((acc, event) => {
                 acc[event.month] = acc[event.month] || [];
                 acc[event.month].push(event);
@@ -164,7 +178,6 @@ const MyEventsScreen = ({ navigation }) => {
         };
         fetchData();
     }, [userInfo, userToken])
-    // console.log(events);
     return (
         <>
             <Spinner/>
@@ -176,7 +189,7 @@ const MyEventsScreen = ({ navigation }) => {
                             <React.Fragment key={month}>
                                 <TxtInria style={s.monthHeader}>{month}</TxtInria>
                                 {eventsOfMonth.map(event => (
-                                    <TouchableOpacity key={event.id}>
+                                    <TouchableOpacity key={event.id} onPress={() => navigation.navigate('Event', { eventId: event.id })} >
                                         <View style={s.card}>
                                             <View style={s.cardTitle}>
                                                 <TxtJostBold style={s.txtTitle}>{event.title}</TxtJostBold>

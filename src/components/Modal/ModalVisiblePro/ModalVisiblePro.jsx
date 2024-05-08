@@ -1,9 +1,10 @@
 import { Modal, TouchableOpacity, View } from "react-native";
-import { s } from "./ModalEvent.style";
+import { TxtInria } from "../../TxtInria/TxtInria";
+import { s } from "./ModalVisiblePro.style"
 import Close from "../../../assets/icons/Close";
 
 
-export function ModalEvent({ isVisible, onClose, children }) {
+export function ModalVisiblePro({ isVisible, onClose, children }) {
 
     return(
         <Modal

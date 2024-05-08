@@ -12,17 +12,25 @@ import MapPin from "../../../assets/icons/MapPin";
 import { format, parseISO } from "date-fns";
 import Globe from "../../../assets/icons/Globe";
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
+import Danger from "../../../assets/icons/Danger.js";
 import { ModalEvent } from "../../../components/Modal/ModalEvent/ModalEvent";
 import Checkbox from 'expo-checkbox';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ModalDelete } from "../../../components/Modal/ModalDelete/ModalDelete";
+import { ModalVisiblePro } from "../../../components/Modal/ModalVisiblePro/ModalVisiblePro"
 
 
 const EventShowScreen = ({ route, navigation }) => {
     const { eventId } = route.params;
     const { userInfo, userToken } = useContext(AuthContext);
-    const [modalVisible, setModalVisible] = useState(false);
     const [event, setEvent] = useState(null);
-    const [registrationCode, setRegistrationCode] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
+    const [modalVisiblePro, setModalVisiblePro] = useState(false);
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [participationId, setParticipationId] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
+    const [registrationCode, setRegistrationCode] = useState('');
 
 
     const openURL = () => {
@@ -40,6 +48,7 @@ const EventShowScreen = ({ route, navigation }) => {
 
 
     useEffect(() => {
+
         const fetchEvent = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}events/${eventId}`, {
@@ -48,18 +57,21 @@ const EventShowScreen = ({ route, navigation }) => {
                 const data = response.data.data
                 const event = data.attributes
                 setEvent(event);
+                const storedIsRegistered = await AsyncStorage.getItem(`event_${eventId}_registered`);
+                setIsRegistered(storedIsRegistered === 'true');
             } catch (e) {
                 console.error('Failed to fetch event details: ', e);
             }
         };
         fetchEvent();
-    }, [eventId]);
+
+    }, [eventId, userToken]);
+
     if (!event) {
-
-
         return <TxtInria>Loading...</TxtInria>;
     }
     
+    // Création participation
     const handleParticipation = async () => {
         try {
             const payload = {
@@ -69,12 +81,19 @@ const EventShowScreen = ({ route, navigation }) => {
             const response = await axios.post(`${BASE_URL}events/${eventId}/participations`, payload, {
                 headers: { Authorization: userToken }
             });
-            if (response.status === 201) {
+            if (response.status === 201 && response.data && response.data.data) {
+                const newParticipationId = response.data.data.id;
+                setParticipationId(newParticipationId);
+                await AsyncStorage.setItem(`event_${eventId}_participation_id`, newParticipationId);
+
                 showMessage({
                     message: "Participation recorded successfully",
                     type: "success",
                     duration: 4000
                 });
+
+                setIsRegistered(true);
+                await AsyncStorage.setItem(`event_${eventId}_registered`, 'true');
             } else {
                 console.error('Failed to record participation');
             }
@@ -84,13 +103,52 @@ const EventShowScreen = ({ route, navigation }) => {
             setModalVisible(false)
         }
     };
-    const toggleCheckbox = () => {
-        setIsChecked(!isChecked);
-      };
 
-    const handleTextChange = (text) => {
-        setRegistrationCode(text.toUpperCase());
-    };
+    const toggleCheckbox = () => setIsChecked(!isChecked);
+    const handleTextChange = (text) => setRegistrationCode(text.toUpperCase());
+
+    // Suppression participation
+    const destroyParticipation = async () => {
+        try {
+            const response = await axios.delete(`${BASE_URL}events/${eventId}/participations/${participationId}`, {
+                headers: { Authorization: userToken }
+            });
+    
+            if (response.status === 200) {
+                showMessage({
+                    message: "Participation deleted successfully",
+                    type: "success",
+                    duration: 4000
+                });
+    
+                setIsRegistered(false);
+                setModalVisible(false);
+                setParticipationId(null)
+                await AsyncStorage.removeItem(`event_${eventId}_registered`);
+                await AsyncStorage.removeItem(`event_${eventId}_participation_id`);
+                setModalDeleteVisible(false)
+            } else {
+                console.error('Failed to delete participation');
+                setModalDeleteVisible(false)
+            }
+        } catch (e) {
+            console.error('Error deleting participation:', e);
+            setModalDeleteVisible(false)
+        }
+    }
+
+    // Update participation
+    const updateParticipation = async () => {
+        try {
+            const response = await axios.patch(`${BASE_URL}events/${eventId}/participations/${participationId}`, {
+                headers: { Authorization: userToken }
+            });
+        } catch(e) {
+
+        }
+    }
+
+    // Header
     const backButton = (
         <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeft/>
@@ -106,13 +164,28 @@ const EventShowScreen = ({ route, navigation }) => {
             </View>
             <View>
                 <View style={s.header_nav}>
-                    <TouchableOpacity style={s.navContainer}>
-                        <TxtJostBold style={s.nav_txt_active}>All Upcoming Events</TxtJostBold>
-                        <View style={s.underline}></View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('MyEvents')}>
-                        <TxtJost style={s.nav_txt}>My Events</TxtJost>
-                    </TouchableOpacity>
+                    {!isRegistered ? (
+                        <>
+                            <TouchableOpacity style={s.navContainer} onPress={() => navigation.navigate('Events')}>
+                                <TxtJostBold style={s.nav_txt_active}>All Upcoming Events</TxtJostBold>
+                                <View style={s.underline}></View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate('MyEvents')}>
+                                <TxtJost style={s.nav_txt}>My Events</TxtJost>
+                            </TouchableOpacity>
+                        </>
+                    ) : (
+                        <>
+                            <TouchableOpacity  onPress={() => navigation.navigate('Events')}>
+                                <TxtJost style={s.nav_txt}>All Upcoming Events</TxtJost>
+                            </TouchableOpacity>
+                            <TouchableOpacity  style={s.navContainer} onPress={() => navigation.navigate('MyEvents')}>
+                                <TxtJostBold style={s.nav_txt_active}>My Events</TxtJostBold>
+                                <View style={s.underline}></View>
+                            </TouchableOpacity>
+                        </>
+                    )}
+                    
                 </View>
             </View>
         </View>
@@ -148,11 +221,41 @@ const EventShowScreen = ({ route, navigation }) => {
                             <TxtInria style={s.txtdescription}>{event.description}</TxtInria>
                         </View>
                     </View>
-                    <View style={s.viewbtn}>
-                        <TouchableOpacity style={s.btn} onPress={() => setModalVisible(true)}>
-                            <TxtJostSemiBold style={s.txtbtn}>Register</TxtJostSemiBold>
-                        </TouchableOpacity>
-                    </View>
+                    {!isRegistered ? (
+                        <View style={s.viewbtn}>
+                                <TouchableOpacity style={s.btn} onPress={() => setModalVisible(true)}>
+                                    <TxtJostSemiBold style={s.txtbtn}>Register</TxtJostSemiBold>
+                                </TouchableOpacity>
+                        </View>
+                    ) : (
+                        <View style={s.containerBtn}>
+                            <View style={s.viewBtnParticipation}>
+                                <TouchableOpacity style={s.btnParticipation} onPress={() => navigation.navigate('Exhibitors')}>
+                                    <TxtJost style={s.btnTxtParticipation}>Exhibitors</TxtJost>
+                                </TouchableOpacity>
+                                {!isChecked ? (
+                                    <>
+                                        <TouchableOpacity style={s.btnParticipation} onPress={() => setModalVisiblePro(true)}>
+                                            <TxtJost style={s.btnTxtParticipation}>Professional visitors</TxtJost>
+                                        </TouchableOpacity>
+                                    </>
+                                ) : (
+                                    <>
+                                        <TouchableOpacity style={s.btnParticipation} onPress={() => navigation.navigate('ProVisitors')}>
+                                            <TxtJost style={s.btnTxtParticipation}>Professional visitors</TxtJost>
+                                        </TouchableOpacity>
+                                    </>
+                                )}
+                            </View>
+                            <View style={s.viewUnsubscribe}>
+                                <TxtInriaItalic style={s.txtItalic}>You can no longer participate in this event?</TxtInriaItalic>
+                                <TouchableOpacity onPress={() => setModalDeleteVisible(true)}>
+                                    <TxtJostSemiBold style={s.btnUnsubscribe}>Unsubscribe</TxtJostSemiBold>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                    )}
                 </ScrollView>
                 <ModalEvent isVisible={modalVisible} onClose={() => setModalVisible(false)}>   
                     <Image source={{ uri: event.logo_url }} style={s.logoModal} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)}/>
@@ -201,8 +304,32 @@ const EventShowScreen = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
                 </ModalEvent>
-            </View>
+                <ModalDelete visible={modalDeleteVisible} onConfirm={destroyParticipation} onCancel={() => setModalDeleteVisible(false)}>Please, confirm your unsubscription</ModalDelete>
+                <ModalVisiblePro isVisible={modalVisiblePro} onClose={() => setModalVisiblePro(false)}>
+                    <View>
+                        <Danger/>
+                    </View>
 
+                        <View>
+                            <TxtInria>You do not have access to the room list {event.title}.</TxtInria>
+                        </View>
+                        <TouchableOpacity style={s.checkboxView}
+                            onPress={toggleCheckbox}
+                            activeOpacity={0.7}>
+                            <Checkbox 
+                                value={isChecked}
+                                onValueChange={setIsChecked}
+                                color={isChecked ? "#FBD160" : undefined}
+                                style={s.checkbox} />
+                            <TxtInriaItalic style={{marginLeft: 10, color: "#FFFFFF"}}>I accept to appear in the list of people present at the event. If you check this box, you will also have access to the list of registered people.</TxtInriaItalic>
+                        </TouchableOpacity>
+                        <View style={s.viewBtn}>
+                            <TouchableOpacity style={s.btnConfirm} onPress={handleParticipation}>
+                                <TxtJostBold style={s.btntxt}>Confirm</TxtJostBold>
+                            </TouchableOpacity>
+                        </View>
+                </ModalVisiblePro>
+            </View>
         </>
     )
 }

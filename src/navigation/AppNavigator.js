@@ -16,6 +16,8 @@ import { AuthContext } from '../context/AuthContext.js';
 import Footer from "../components/Footer/Footer.jsx";
 import { Easing } from "react-native";
 import MyEventsScreen from '../screens/User/MyEvents/MyEventsScreen.jsx';
+import ExhibitorsScreen from '../screens/Events/Exhibitors/ExhibitorsScreen.jsx';
+import ProVisitorsScreen from '../screens/Events/ProVisitors/ProVisitorsScreen.jsx';
 
 
 const Stack = createStackNavigator();
@@ -64,6 +66,8 @@ const AppNavigator = () => {
                                 <Stack.Screen name="Settings" component={SettingsScreen} />
                                 <Stack.Screen name="Events" component={EventIndexScreen} />
                                 <Stack.Screen name="Event" component={EventShowScreen} />
+                                <Stack.Screen name="Exhibitors" component={ExhibitorsScreen} />
+                                <Stack.Screen name="ProVisitors" component={ProVisitorsScreen} />
                                 <Stack.Screen name="MyEvents" component={MyEventsScreen} />
                                 <Stack.Screen name="Repertoire" component={RepertoireScreen} />
                                 <Stack.Screen name="Scan" component={ScanScreen} />

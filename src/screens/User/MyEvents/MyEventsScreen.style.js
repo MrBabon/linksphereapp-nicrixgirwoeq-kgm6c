@@ -122,11 +122,19 @@ export const s = StyleSheet.create({
         justifyContent: "center",
         marginTop: 18,
         marginHorizontal: 35,
-        backgroundColor: "#fcb8d930",
+        backgroundColor: "#fae9f1ff",
         borderWidth: 0.3,
         borderColor: "#F9447F",
         borderRadius: 12, // Assurez-vous que la bordure est arrondie
-        overflow: "hidden" 
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
     },
 
 
