@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { BASE_URL } from "../../../config";
 import { AuthContext } from "../../../context/AuthContext";
 import { TxtInria, TxtInriaBold, TxtInriaItalic } from "../../../components/TxtInria/TxtInria";
-import { Image, ScrollView, TextInput, TouchableOpacity, View, Linking, Switch } from "react-native";
+import { Image, ScrollView, TextInput, TouchableOpacity, View, Linking } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJost/TxtJost";
 import CalendarEvent from "../../../assets/icons/CalendarEvent";
@@ -59,6 +59,9 @@ const EventShowScreen = ({ route, navigation }) => {
                 setEvent(event);
                 const storedIsRegistered = await AsyncStorage.getItem(`event_${eventId}_registered`);
                 setIsRegistered(storedIsRegistered === 'true');
+                const storedCheckedState = await AsyncStorage.getItem(`event_${eventId}_visible_in_participants`);
+                setIsChecked(storedCheckedState === 'true');
+                console.log(isChecked);
             } catch (e) {
                 console.error('Failed to fetch event details: ', e);
             }
@@ -84,16 +87,23 @@ const EventShowScreen = ({ route, navigation }) => {
             if (response.status === 201 && response.data && response.data.data) {
                 const newParticipationId = response.data.data.id;
                 setParticipationId(newParticipationId);
+
+                // Enregistrer l'ID de participation dans AsyncStorage
                 await AsyncStorage.setItem(`event_${eventId}_participation_id`, newParticipationId);
 
+                // Enregistrer l'état visible_in_participants dans AsyncStorage
+                const stringCheckedState = isChecked ? 'true' : 'false';
+                await AsyncStorage.setItem(`event_${eventId}_visible_in_participants`, stringCheckedState);
+                
                 showMessage({
                     message: "Participation recorded successfully",
                     type: "success",
                     duration: 4000
                 });
-
+                // Mettre à jour l'état local de l'inscription
                 setIsRegistered(true);
                 await AsyncStorage.setItem(`event_${eventId}_registered`, 'true');
+                
             } else {
                 console.error('Failed to record participation');
             }
@@ -104,11 +114,20 @@ const EventShowScreen = ({ route, navigation }) => {
         }
     };
 
-    const toggleCheckbox = () => setIsChecked(!isChecked);
+    const toggleCheckbox = async () => {
+        const newCheckedState = !isChecked;
+        setIsChecked(newCheckedState);
+        
+        // Sauvegarder l'état dans AsyncStorage
+        await AsyncStorage.setItem(`event_${eventId}_visible_in_participants`, newCheckedState ? 'true' : 'false');
+    };
+    
     const handleTextChange = (text) => setRegistrationCode(text.toUpperCase());
 
     // Suppression participation
     const destroyParticipation = async () => {
+        let participationId = await AsyncStorage.getItem(`event_${eventId}_participation_id`)
+        setParticipationId(participationId)
         try {
             const response = await axios.delete(`${BASE_URL}events/${eventId}/participations/${participationId}`, {
                 headers: { Authorization: userToken }
@@ -139,13 +158,41 @@ const EventShowScreen = ({ route, navigation }) => {
 
     // Update participation
     const updateParticipation = async () => {
+        if (!isChecked) {
+            showMessage({
+                message: "The checkbox is not checked, update aborted.",
+                type: "warning",
+                duration: 4000
+            });
+            setModalVisiblePro(false)
+            return; 
+        }
+        
+        let participationId = await AsyncStorage.getItem(`event_${eventId}_participation_id`)
+        setParticipationId(participationId)
         try {
-            const response = await axios.patch(`${BASE_URL}events/${eventId}/participations/${participationId}`, {
+            const payload = {
+                visible_in_participants: isChecked
+            };
+            const response = await axios.patch(`${BASE_URL}events/${eventId}/participations/${participationId}`, payload, {
                 headers: { Authorization: userToken }
             });
+            if (response.status === 200) {
+                showMessage({
+                    message: "Participation update successfully",
+                    type: "success",
+                    duration: 4000
+                });
+            }
         } catch(e) {
-
+            console.error('Error updating participation:', e);
+            showMessage({
+                message: "Error updating participation.",
+                type: "danger",
+                duration: 4000
+            });
         }
+        setModalVisiblePro(false)
     }
 
     // Header
@@ -230,18 +277,24 @@ const EventShowScreen = ({ route, navigation }) => {
                     ) : (
                         <View style={s.containerBtn}>
                             <View style={s.viewBtnParticipation}>
-                                <TouchableOpacity style={s.btnParticipation} onPress={() => navigation.navigate('Exhibitors')}>
+                                <TouchableOpacity 
+                                        style={s.btnParticipation}
+                                        onPress={() => navigation.navigate('Exhibitors', { eventId: eventId })}>
                                     <TxtJost style={s.btnTxtParticipation}>Exhibitors</TxtJost>
                                 </TouchableOpacity>
                                 {!isChecked ? (
                                     <>
-                                        <TouchableOpacity style={s.btnParticipation} onPress={() => setModalVisiblePro(true)}>
+                                        <TouchableOpacity 
+                                            style={s.btnParticipation}
+                                            onPress={() => setModalVisiblePro(true)}>
                                             <TxtJost style={s.btnTxtParticipation}>Professional visitors</TxtJost>
                                         </TouchableOpacity>
                                     </>
                                 ) : (
                                     <>
-                                        <TouchableOpacity style={s.btnParticipation} onPress={() => navigation.navigate('ProVisitors')}>
+                                        <TouchableOpacity 
+                                            style={s.btnParticipation} 
+                                            onPress={() => navigation.navigate('ProVisitors', { eventId: eventId })}>
                                             <TxtJost style={s.btnTxtParticipation}>Professional visitors</TxtJost>
                                         </TouchableOpacity>
                                     </>
@@ -311,7 +364,7 @@ const EventShowScreen = ({ route, navigation }) => {
                     </View>
 
                         <View>
-                            <TxtInria>You do not have access to the room list {event.title}.</TxtInria>
+                            <TxtInria style={s.infoNotAccess}>You do not have access to the room list {event.title}.</TxtInria>
                         </View>
                         <TouchableOpacity style={s.checkboxView}
                             onPress={toggleCheckbox}
@@ -321,10 +374,10 @@ const EventShowScreen = ({ route, navigation }) => {
                                 onValueChange={setIsChecked}
                                 color={isChecked ? "#FBD160" : undefined}
                                 style={s.checkbox} />
-                            <TxtInriaItalic style={{marginLeft: 10, color: "#FFFFFF"}}>I accept to appear in the list of people present at the event. If you check this box, you will also have access to the list of registered people.</TxtInriaItalic>
+                            <TxtInriaItalic style={{marginLeft: 10, color: "#FFFFFF", fontSize: 14}}>I accept to appear in the list of people present at the event. If you check this box, you will also have access to the list of registered people.</TxtInriaItalic>
                         </TouchableOpacity>
                         <View style={s.viewBtn}>
-                            <TouchableOpacity style={s.btnConfirm} onPress={handleParticipation}>
+                            <TouchableOpacity style={s.btnConfirm} onPress={updateParticipation}>
                                 <TxtJostBold style={s.btntxt}>Confirm</TxtJostBold>
                             </TouchableOpacity>
                         </View>

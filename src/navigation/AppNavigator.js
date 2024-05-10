@@ -16,8 +16,8 @@ import { AuthContext } from '../context/AuthContext.js';
 import Footer from "../components/Footer/Footer.jsx";
 import { Easing } from "react-native";
 import MyEventsScreen from '../screens/User/MyEvents/MyEventsScreen.jsx';
-import ExhibitorsScreen from '../screens/Events/Exhibitors/ExhibitorsScreen.jsx';
-import ProVisitorsScreen from '../screens/Events/ProVisitors/ProVisitorsScreen.jsx';
+import ExhibitorsScreen from '../screens/Events/ExhibitorsIndex/ExhibitorsScreen.jsx';
+import ProVisitorsScreen from '../screens/Events/ProVisitorsIndex/ProVisitorsScreen.jsx';
 
 
 const Stack = createStackNavigator();

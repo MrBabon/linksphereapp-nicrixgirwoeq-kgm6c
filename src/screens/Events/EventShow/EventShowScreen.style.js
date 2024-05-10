@@ -296,4 +296,11 @@ export const s = StyleSheet.create({
         textTransform: "uppercase",
         color: "#1AC1B9"
     },
+
+    infoNotAccess: {
+        color: "#FFFFFF",
+        fontSize: 18,
+        marginVertical: 10,
+        textAlign: "center"
+    },
 })
