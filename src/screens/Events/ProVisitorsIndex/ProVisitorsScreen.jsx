@@ -79,7 +79,7 @@ const ProVisitorsScreen = ({ route, navigation }) => {
                                 <TxtInria style={s.industry}>{user.attributes.industry ? user.attributes.industry : "Industry not specified"}</TxtInria>
                             </View>
                             <View style={s.cardAvatar}>
-                                <Avatar uri={user.attributes.avatar_url} style={s.avatar_url} />
+                                <Avatar uri={user.attributes.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
                             </View>
                         </TouchableOpacity>
                     </View>
