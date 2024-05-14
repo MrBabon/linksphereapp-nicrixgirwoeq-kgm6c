@@ -34,7 +34,8 @@ export const s = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 80
+        marginTop: 80,
+        marginBottom: 10
     },
 
     container_avatar:{

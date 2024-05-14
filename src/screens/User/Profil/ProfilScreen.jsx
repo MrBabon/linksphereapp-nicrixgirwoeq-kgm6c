@@ -84,15 +84,15 @@ const ProfilScreen = ({ navigation }) => {
                         <TxtInria style={s.info}>{userInfo.email}</TxtInria>
                     </View>
                     <View style={s.user_info}>
-                        <Globe />
+                        <Globe url={userInfo.website} />
                         <TxtInria style={s.info}>{userInfo.website}</TxtInria>
                     </View>
                 </View>
                 <View style={s.social}>
-                    <Twitter />
-                    <Linkedin />
-                    <Facebook />
-                    <Instagram />
+                    <Twitter  url={userInfo.twitter} />
+                    <Linkedin url={userInfo.linkedin} />
+                    <Facebook url={userInfo.facebook} />
+                    <Instagram url={userInfo.instagram} />
                 </View>
                 <View style={s.yellow}></View>
                 <View style={s.detail}>

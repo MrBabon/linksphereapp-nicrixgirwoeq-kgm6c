@@ -76,12 +76,22 @@ const ExhibitorsScreen = ({ route, navigation }) => {
                     const response = await axios.get(`${BASE_URL}events/${eventId}/exposant`, {
                         header: { Authorization: userToken }
                     });
+                    const data = response.data
+                    const exhibitors = data.included.filter(item => item.type === "exhibitor").map(exhibitor => {
+                        const entrepriseData = data.included.find(entreprise => entreprise.id === exhibitor.relationships.entreprise.data.id && entreprise.type === "entreprise");
+                        return  {
+                            id: exhibitor.id,
+                            entrepriseId: entrepriseData.id,
+                            name: entrepriseData.attributes.name,
+                            headline: entrepriseData.attributes.headline,
+                            industry: entrepriseData.attributes.industry,
+                            logo_url: entrepriseData.attributes.logo_url,
+                        }
+                    })
                     const event = response.data.data
-                    const includedData = response.data.included;
-                    const exhibitorCompanies = includedData.filter(item => item.type === "entreprise");
                     const storedCheckedState = await AsyncStorage.getItem(`event_${eventId}_visible_in_participants`);
                     setIsChecked(storedCheckedState === 'true');
-                    setExhibitors(exhibitorCompanies);
+                    setExhibitors(exhibitors);
                     setEvents(event);
                 }
 
@@ -130,6 +140,7 @@ const ExhibitorsScreen = ({ route, navigation }) => {
         setModalVisiblePro(false)
     }
 
+
     return (
         <>
             <Spinner/>
@@ -137,14 +148,14 @@ const ExhibitorsScreen = ({ route, navigation }) => {
             <ScrollView>
                 {exhibitors.map(exhibitor => (
                         <View key={exhibitor.id}>
-                            <TouchableOpacity style={s.card}>
+                            <TouchableOpacity style={s.card} onPress={() => navigation.navigate('Exhibitor', { eventId: eventId, exhibitorId: exhibitor.id })}>
                                 <View style={s.cardImg}>
-                                    <Image source={{ uri: exhibitor.attributes.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
+                                    <Image source={{ uri: exhibitor.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
                                 </View>
                                 <View style={s.containerInfo}>
-                                    <TxtInriaBold style={s.name}>{exhibitor.attributes.name}</TxtInriaBold>
-                                    <TxtInria style={s.headline}>{exhibitor.attributes.headline}</TxtInria>
-                                    <TxtInria style={s.industry}>{exhibitor.attributes.industry}</TxtInria>
+                                    <TxtInriaBold style={s.name}>{exhibitor.name}</TxtInriaBold>
+                                    <TxtInria style={s.headline}>{exhibitor.headline}</TxtInria>
+                                    <TxtInria style={s.industry}>{exhibitor.industry}</TxtInria>
                                 </View>
                                 <View style={s.standView}>
                                     <TxtInriaBold style={s.stand}>Stand 04.09</TxtInriaBold>

@@ -85,4 +85,9 @@ export const s = StyleSheet.create({
         width: 55,
         height: 55
     },
+
+    border: {
+        height: 0.5,
+        backgroundColor: "#FBD160"
+    },
 })

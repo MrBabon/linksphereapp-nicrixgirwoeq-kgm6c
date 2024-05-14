@@ -33,7 +33,7 @@ const ProVisitorsScreen = ({ route, navigation }) => {
                 <TouchableOpacity onPress={() => navigation.navigate('Exhibitors', { eventId: eventId })}>
                     <TxtJost>Exhibitors</TxtJost>
                 </TouchableOpacity>
-                <TouchableOpacity style={s.navContainer} onPress={() => navigation.navigate('ProVisitors')}>
+                <TouchableOpacity style={s.navContainer} onPress={() => navigation.navigate('ProVisitors', { eventId: eventId })}>
                     <TxtJostBold style={s.nav_txt_active}>Professional Visitors</TxtJostBold>
                     <View style={s.underline}></View>
                 </TouchableOpacity>
@@ -51,7 +51,7 @@ const ProVisitorsScreen = ({ route, navigation }) => {
                 const isVisible = storedCheckedState === 'true';
                 if (userInfo && userToken && isVisible) {
                     const response = await axios.get(`${BASE_URL}events/${eventId}/visitor`, {
-                        header: { Authorization: userToken }
+                        headers: { Authorization: userToken }
                     });
                     const userParticipant = response.data.included;
                     setUsers(userParticipant);
@@ -82,6 +82,7 @@ const ProVisitorsScreen = ({ route, navigation }) => {
                                 <Avatar uri={user.attributes.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
                             </View>
                         </TouchableOpacity>
+                        <View style={s.border}></View>
                     </View>
                 ))}
             </ScrollView>
