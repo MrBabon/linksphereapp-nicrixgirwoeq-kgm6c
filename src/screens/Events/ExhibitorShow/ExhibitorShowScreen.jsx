@@ -2,7 +2,7 @@ import { ScrollView, TouchableOpacity, View } from "react-native";
 import { TxtInria, TxtInriaBold } from "../../../components/TxtInria/TxtInria";
 import { s } from "./ExhibitorShowScreen.style";
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
-import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
+import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
@@ -14,6 +14,7 @@ import Twitter from "../../../assets/icons/Twitter";
 import Linkedin from "../../../assets/icons/Linkedin";
 import Facebook from "../../../assets/icons/Facebook";
 import Globe from "../../../assets/icons/Globe";
+import ChevronRight from "../../../assets/icons/ChevronRight";
 
 const ExhibitorShowScreen = ({ route, navigation }) => {
     const { eventId, exhibitorId } = route.params;
@@ -36,7 +37,7 @@ const ExhibitorShowScreen = ({ route, navigation }) => {
             <View style={s.header}>
                 {backButton}
                 <View style={s.header_texts}>
-                    <TxtJost style={s.txtheader}>Entreprise</TxtJost>
+                    <TxtJost style={s.txtheader}>Informations</TxtJost>
                 </View>
             </View>
             <View style={s.header_nav}>
@@ -65,8 +66,7 @@ const ExhibitorShowScreen = ({ route, navigation }) => {
         const newCheckedState = !isChecked;
         setIsChecked(newCheckedState);
         
-        // Sauvegarder l'état dans AsyncStorage
-        await AsyncStorage.setItem(`event_${eventId}_visible_in_participants`, newCheckedState ? 'true' : 'false');
+
     };
 
     useEffect(() => {
@@ -115,7 +115,14 @@ const ExhibitorShowScreen = ({ route, navigation }) => {
                         </View>
                     </View>
                 </View>
-                <TxtInria>{entreprise.name}</TxtInria>
+                <View style={s.container}>
+                    <TxtJostBold style={s.name}>{entreprise.name}</TxtJostBold>
+                    <TxtInria style={s.description}>{entreprise.description}</TxtInria>
+                <TouchableOpacity style={s.linkShow} onPress={() => navigation.navigate('Entreprise', {entrepriseId: entreprise.id})}>
+                    <ChevronRight color="#F9447F"/>
+                    <TxtJostSemiBold style={s.linkTxt}>View business page</TxtJostSemiBold>
+                </TouchableOpacity>
+                </View>
             </ScrollView>
         </>
     )

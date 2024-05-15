@@ -77,7 +77,8 @@ export const s = StyleSheet.create({
         maxWidth: 74,
         height: 74,
         borderRadius: 12,
-
+        resizeMode: 'contain',
+        backgroundColor: "#e5e5e5b0"
     },
 
     containerSocial: {
@@ -114,5 +115,32 @@ export const s = StyleSheet.create({
 
     website: {
         fontSize: 14
+    },
+
+    container: {
+        paddingHorizontal: 10
+    },
+
+    name: {
+        fontSize: 20,
+        textAlign: "center",
+        marginBottom: 10
+    },
+
+    description: {
+        fontSize: 16
+    },
+
+    linkShow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 20
+    },
+
+    linkTxt: {
+        color: "#F9447F",
+        marginLeft: 5,
+        textTransform: "uppercase",
+        fontSize: 15
     },
 })

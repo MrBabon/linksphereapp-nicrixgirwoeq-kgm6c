@@ -126,4 +126,49 @@ export const s = StyleSheet.create({
         backgroundColor: "#FBD160"
     },
 
+    // MODAL
+
+    checkboxView: {
+        flexDirection: "row",
+        marginHorizontal: 8
+    },
+    checkbox: {
+        width: 14,
+        height: 14,
+        borderColor: "#FFFFFF"
+    },
+
+    viewBtn: {
+        marginTop: 25
+    },
+
+    btnConfirm: {
+        backgroundColor: "#FBD160",
+        paddingHorizontal: 16,
+        paddingVertical: 5,
+        borderRadius: 22,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.35,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    },
+
+    btntxt: {
+        fontSize: 16,
+        textTransform: "uppercase",
+        color: "#1AC1B9"
+    },
+
+    infoNotAccess: {
+        color: "#FFFFFF",
+        fontSize: 18,
+        marginVertical: 10,
+        textAlign: "center"
+    },
+
 })

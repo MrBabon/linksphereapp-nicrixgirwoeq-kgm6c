@@ -64,41 +64,48 @@ const ExhibitorsScreen = ({ route, navigation }) => {
         const newCheckedState = !isChecked;
         setIsChecked(newCheckedState);
         
-        // Sauvegarder l'état dans AsyncStorage
-        await AsyncStorage.setItem(`event_${eventId}_visible_in_participants`, newCheckedState ? 'true' : 'false');
+
     };
 
     useEffect(() => {
-
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
                     const response = await axios.get(`${BASE_URL}events/${eventId}/exposant`, {
-                        header: { Authorization: userToken }
+                        headers: { Authorization: userToken }
                     });
-                    const data = response.data
+                    const data = response.data;
+    
+    
                     const exhibitors = data.included.filter(item => item.type === "exhibitor").map(exhibitor => {
-                        const entrepriseData = data.included.find(entreprise => entreprise.id === exhibitor.relationships.entreprise.data.id && entreprise.type === "entreprise");
-                        return  {
+                        const entrepriseData = data.included.find(entreprise => entreprise.id === exhibitor.relationships?.entreprise?.data?.id && entreprise.type === "entreprise");
+                        if (!entrepriseData) {
+                            return null; // gérer autrement l'absence de données de l'entreprise
+                        }
+                        return {
                             id: exhibitor.id,
                             entrepriseId: entrepriseData.id,
-                            name: entrepriseData.attributes.name,
-                            headline: entrepriseData.attributes.headline,
-                            industry: entrepriseData.attributes.industry,
-                            logo_url: entrepriseData.attributes.logo_url,
-                        }
-                    })
-                    const event = response.data.data
-                    const storedCheckedState = await AsyncStorage.getItem(`event_${eventId}_visible_in_participants`);
-                    setIsChecked(storedCheckedState === 'true');
+                            name: entrepriseData.attributes?.name,
+                            headline: entrepriseData.attributes?.headline,
+                            industry: entrepriseData.attributes?.industry,
+                            logo_url: entrepriseData.attributes?.logo_url,
+                        };
+                    }).filter(exhibitor => exhibitor !== null); // filtre les valeurs nulles
+    
+                    const event = data.data;
+                    const participation = data.included.find(item => item.type === "participation"  && item.attributes.user_id === userInfo.id);
+    
+    
+                    setIsChecked(participation?.attributes?.visible_in_participants || false);
+                    setParticipationId(participation?.id);
                     setExhibitors(exhibitors);
                     setEvents(event);
                 }
-
-            } catch(e) {
+    
+            } catch (e) {
                 console.error('Error fetching exhibitors:', e);
             }
-        }
+        };
         fetchData();
     }, [eventId, userToken]);
 
@@ -113,8 +120,7 @@ const ExhibitorsScreen = ({ route, navigation }) => {
             return; 
         }
         
-        let participationId = await AsyncStorage.getItem(`event_${eventId}_participation_id`)
-        setParticipationId(participationId)
+
         try {
             const payload = {
                 visible_in_participants: isChecked

@@ -19,6 +19,7 @@ import MyEventsScreen from '../screens/User/MyEvents/MyEventsScreen.jsx';
 import ExhibitorsScreen from '../screens/Events/ExhibitorsIndex/ExhibitorsScreen.jsx';
 import ProVisitorsScreen from '../screens/Events/ProVisitorsIndex/ProVisitorsScreen.jsx';
 import ExhibitorShowScreen from '../screens/Events/ExhibitorShow/ExhibitorShowScreen.jsx';
+import EntrepriseScreen from '../screens/Entreprises/EntrepriseScreen.jsx';
 
 
 const Stack = createStackNavigator();
@@ -69,6 +70,7 @@ const AppNavigator = () => {
                                 <Stack.Screen name="Event" component={EventShowScreen} />
                                 <Stack.Screen name="Exhibitors" component={ExhibitorsScreen} />
                                 <Stack.Screen name="Exhibitor" component={ExhibitorShowScreen} />
+                                <Stack.Screen name="Entreprise" component={EntrepriseScreen} />
                                 <Stack.Screen name="ProVisitors" component={ProVisitorsScreen} />
                                 <Stack.Screen name="MyEvents" component={MyEventsScreen} />
                                 <Stack.Screen name="Repertoire" component={RepertoireScreen} />

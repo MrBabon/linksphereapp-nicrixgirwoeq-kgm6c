@@ -52,16 +52,22 @@ const EventShowScreen = ({ route, navigation }) => {
         const fetchEvent = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}events/${eventId}`, {
-                    header: { Authorization: userToken }
+                    headers: { Authorization: userToken }
                 });
                 const data = response.data.data
                 const event = data.attributes
                 setEvent(event);
-                const storedIsRegistered = await AsyncStorage.getItem(`event_${eventId}_registered`);
-                setIsRegistered(storedIsRegistered === 'true');
-                const storedCheckedState = await AsyncStorage.getItem(`event_${eventId}_visible_in_participants`);
-                setIsChecked(storedCheckedState === 'true');
-                console.log(isChecked);
+
+                // Utilisation directe des données de l'API
+                const isUserRegistered = event.is_registered;
+                setIsRegistered(isUserRegistered);
+                const isUserChecked = event.is_visible_in_participants;
+                setIsChecked(isUserChecked);
+                const participationId = event.participation_id;
+                if (participationId) {
+                    setParticipationId(participationId);
+                }
+
             } catch (e) {
                 console.error('Failed to fetch event details: ', e);
             }
@@ -88,21 +94,14 @@ const EventShowScreen = ({ route, navigation }) => {
                 const newParticipationId = response.data.data.id;
                 setParticipationId(newParticipationId);
 
-                // Enregistrer l'ID de participation dans AsyncStorage
-                await AsyncStorage.setItem(`event_${eventId}_participation_id`, newParticipationId);
-
-                // Enregistrer l'état visible_in_participants dans AsyncStorage
-                const stringCheckedState = isChecked ? 'true' : 'false';
-                await AsyncStorage.setItem(`event_${eventId}_visible_in_participants`, stringCheckedState);
                 
                 showMessage({
                     message: "Participation recorded successfully",
                     type: "success",
                     duration: 4000
                 });
-                // Mettre à jour l'état local de l'inscription
+
                 setIsRegistered(true);
-                await AsyncStorage.setItem(`event_${eventId}_registered`, 'true');
                 
             } else {
                 console.error('Failed to record participation');
@@ -118,16 +117,12 @@ const EventShowScreen = ({ route, navigation }) => {
         const newCheckedState = !isChecked;
         setIsChecked(newCheckedState);
         
-        // Sauvegarder l'état dans AsyncStorage
-        await AsyncStorage.setItem(`event_${eventId}_visible_in_participants`, newCheckedState ? 'true' : 'false');
     };
     
     const handleTextChange = (text) => setRegistrationCode(text.toUpperCase());
 
     // Suppression participation
     const destroyParticipation = async () => {
-        let participationId = await AsyncStorage.getItem(`event_${eventId}_participation_id`)
-        setParticipationId(participationId)
         try {
             const response = await axios.delete(`${BASE_URL}events/${eventId}/participations/${participationId}`, {
                 headers: { Authorization: userToken }
@@ -143,8 +138,6 @@ const EventShowScreen = ({ route, navigation }) => {
                 setIsRegistered(false);
                 setModalVisible(false);
                 setParticipationId(null)
-                await AsyncStorage.removeItem(`event_${eventId}_registered`);
-                await AsyncStorage.removeItem(`event_${eventId}_participation_id`);
                 setModalDeleteVisible(false)
             } else {
                 console.error('Failed to delete participation');
@@ -167,9 +160,6 @@ const EventShowScreen = ({ route, navigation }) => {
             setModalVisiblePro(false)
             return; 
         }
-        
-        let participationId = await AsyncStorage.getItem(`event_${eventId}_participation_id`)
-        setParticipationId(participationId)
         try {
             const payload = {
                 visible_in_participants: isChecked
