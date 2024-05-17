@@ -28,7 +28,6 @@ export const EventSearch = ({ onSearch, onTitleSearch, setEvents }) => {
         if (title) {
             onTitleSearch(title);
         }  else {
-            console.log("Title is empty, resetting events.");
             onTitleSearch('');
         }
     };

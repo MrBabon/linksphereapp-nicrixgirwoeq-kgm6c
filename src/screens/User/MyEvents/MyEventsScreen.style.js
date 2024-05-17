@@ -101,7 +101,6 @@ export const s = StyleSheet.create({
     },
 
     infoContainer: {
-        width: "100%",
         maxWidth: 440,
         alignSelf: 'center',
         marginHorizontal: "auto",

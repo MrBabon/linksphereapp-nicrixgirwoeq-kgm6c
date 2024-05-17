@@ -29,8 +29,6 @@ const MyEventsScreen = ({ navigation }) => {
             const queryString = `?title=${encodeURIComponent(title)}`;
             fetchMyEvents(queryString);
         } else {
-            console.log("Title is empty, resetting to initial events.");
-
             fetchMyEvents('');
         }
     };
@@ -209,7 +207,7 @@ const MyEventsScreen = ({ navigation }) => {
                                                     </View>
                                                 </View>
                                             </View>
-                                            <TouchableOpacity style={s.btn}>
+                                            <TouchableOpacity style={s.btn} onPress={() => navigation.navigate('Exhibitors', { eventId: event.id })}>
                                                 <TxtJostSemiBold style={s.btnTxt}>Exhibitors & Visitors listing</TxtJostSemiBold>
                                             </TouchableOpacity>
                                         </View>

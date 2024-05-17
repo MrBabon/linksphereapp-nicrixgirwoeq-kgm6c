@@ -11,7 +11,6 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { ModalVisiblePro } from "../../../components/Modal/ModalVisiblePro/ModalVisiblePro";
 import Danger from "../../../assets/icons/Danger";
 import Checkbox from "expo-checkbox";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showMessage } from "react-native-flash-message";
 
 const ExhibitorsScreen = ({ route, navigation }) => {
@@ -80,7 +79,7 @@ const ExhibitorsScreen = ({ route, navigation }) => {
                     const exhibitors = data.included.filter(item => item.type === "exhibitor").map(exhibitor => {
                         const entrepriseData = data.included.find(entreprise => entreprise.id === exhibitor.relationships?.entreprise?.data?.id && entreprise.type === "entreprise");
                         if (!entrepriseData) {
-                            return null; // gérer autrement l'absence de données de l'entreprise
+                            return null;
                         }
                         return {
                             id: exhibitor.id,
@@ -90,7 +89,7 @@ const ExhibitorsScreen = ({ route, navigation }) => {
                             industry: entrepriseData.attributes?.industry,
                             logo_url: entrepriseData.attributes?.logo_url,
                         };
-                    }).filter(exhibitor => exhibitor !== null); // filtre les valeurs nulles
+                    }).filter(exhibitor => exhibitor !== null);
     
                     const event = data.data;
                     const participation = data.included.find(item => item.type === "participation"  && item.attributes.user_id === userInfo.id);

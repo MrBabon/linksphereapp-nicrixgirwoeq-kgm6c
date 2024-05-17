@@ -47,16 +47,26 @@ const ProVisitorsScreen = ({ route, navigation }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const storedCheckedState = await AsyncStorage.getItem(`event_${eventId}_visible_in_participants`);
-                const isVisible = storedCheckedState === 'true';
-                if (userInfo && userToken && isVisible) {
+                if (userInfo && userToken) {
                     const response = await axios.get(`${BASE_URL}events/${eventId}/visitor`, {
                         headers: { Authorization: userToken }
                     });
-                    const userParticipant = response.data.included;
-                    setUsers(userParticipant);
-                } else {
-                    console.warn("User does not have permission or is not visible in participants.");
+
+                    const data = response.data;
+                    const visibleParticipants = data.participations.data || [];
+                    const includedUsers = data.participations.included || [];
+
+                    // Associez les utilisateurs aux participations
+                    const participantsWithUserDetails = visibleParticipants.map(participation => {
+                        const user = includedUsers.find(inc => inc.type === "user" && inc.id === participation.relationships.user.data.id);
+                        return {
+                            ...participation,
+                            user: user ? user.attributes : {},
+                            userId: user ? user.id : null
+                        };
+                    });
+
+                    setUsers(participantsWithUserDetails);
                 }
             } catch (e) {
                 console.error('Error fetching exhibitors:', e);
@@ -64,7 +74,6 @@ const ProVisitorsScreen = ({ route, navigation }) => {
         }
         fetchData();
     }, [eventId, userToken]);
-
     return (
         <>
             <Spinner/>
@@ -72,14 +81,14 @@ const ProVisitorsScreen = ({ route, navigation }) => {
             <ScrollView>
                 {users.map(user => (
                     <View key={user.id}>
-                        <TouchableOpacity style={s.card}>
+                        <TouchableOpacity style={s.card} onPress={() => navigation.navigate('ProVisitor', { userId: user.userId })}>
                             <View style={s.containerInfo}>
-                                <TxtInria>{user.attributes.first_name} {user.attributes.last_name}</TxtInria>
-                                <TxtInria style={s.job}>{user.attributes.job ? user.attributes.job : "Job not specified"}</TxtInria>
-                                <TxtInria style={s.industry}>{user.attributes.industry ? user.attributes.industry : "Industry not specified"}</TxtInria>
+                                <TxtInria>{user.user.first_name} {user.user.last_name}</TxtInria>
+                                <TxtInria style={s.job}>{user.user.job ? user.user.job : "Job not specified"}</TxtInria>
+                                <TxtInria style={s.industry}>{user.user.industry ? user.user.industry : "Industry not specified"}</TxtInria>
                             </View>
                             <View style={s.cardAvatar}>
-                                <Avatar uri={user.attributes.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
+                                <Avatar uri={user.user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
                             </View>
                         </TouchableOpacity>
                         <View style={s.border}></View>

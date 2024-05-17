@@ -1,5 +1,5 @@
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { TxtInria, TxtInriaBold } from "../../../components/TxtInria/TxtInria";
+import { TxtInria, TxtInriaBold, TxtInriaItalic } from "../../../components/TxtInria/TxtInria";
 import { s } from "./ExhibitorShowScreen.style";
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
 import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJost/TxtJost";
@@ -15,13 +15,18 @@ import Linkedin from "../../../assets/icons/Linkedin";
 import Facebook from "../../../assets/icons/Facebook";
 import Globe from "../../../assets/icons/Globe";
 import ChevronRight from "../../../assets/icons/ChevronRight";
+import { ModalVisiblePro } from "../../../components/Modal/ModalVisiblePro/ModalVisiblePro";
+import Danger from "../../../assets/icons/Danger";
+import Checkbox from "expo-checkbox";
+import { showMessage } from "react-native-flash-message";
 
 const ExhibitorShowScreen = ({ route, navigation }) => {
     const { eventId, exhibitorId } = route.params;
-    
     const { userInfo, userToken } = useContext(AuthContext);
+    
     const [entreprise, setEntreprise] = useState({})
     const [isChecked, setIsChecked] = useState(false);
+    const [participationId, setParticipationId] = useState(null);
     const [modalVisiblePro, setModalVisiblePro] = useState(false);
 
 
@@ -76,16 +81,61 @@ const ExhibitorShowScreen = ({ route, navigation }) => {
                     const response = await axios.get(`${BASE_URL}events/${eventId}/exhibitors/${exhibitorId}`, {
                         headers: { Authorization: userToken }
                     });
-                    const data = response.data.data
-                    const entreprise = data.attributes
-                    setEntreprise(entreprise)
+                    const data = response.data;
+                    const exhibitorData = data.entreprise.data.attributes;
+                    const userParticipation = data.user_participation?.data;
+
+                    setEntreprise(exhibitorData);
+
+                    if (userParticipation) {
+                        setIsChecked(userParticipation.attributes.visible_in_participants);
+                        setParticipationId(userParticipation.id);
+                    }
+                    
                 }
             } catch(e){
                 console.error('Error fetching exhibitor:', e);
             }
         }
         fetchData();
-    },[eventId, exhibitorId, userToken])
+    },[eventId, exhibitorId, userToken]);
+    
+    const updateParticipation = async () => {
+        if (!isChecked) {
+            showMessage({
+                message: "The checkbox is not checked, update aborted.",
+                type: "warning",
+                duration: 4000
+            });
+            setModalVisiblePro(false)
+            return; 
+        }
+        
+
+        try {
+            const payload = {
+                visible_in_participants: isChecked
+            };
+            const response = await axios.patch(`${BASE_URL}events/${eventId}/participations/${participationId}`, payload, {
+                headers: { Authorization: userToken }
+            });
+            if (response.status === 200) {
+                showMessage({
+                    message: "Participation update successfully",
+                    type: "success",
+                    duration: 4000
+                });
+            }
+        } catch(e) {
+            console.error('Error updating participation:', e);
+            showMessage({
+                message: "Error updating participation.",
+                type: "danger",
+                duration: 4000
+            });
+        }
+        setModalVisiblePro(false)
+    }
 
     return (
         <>
@@ -118,12 +168,40 @@ const ExhibitorShowScreen = ({ route, navigation }) => {
                 <View style={s.container}>
                     <TxtJostBold style={s.name}>{entreprise.name}</TxtJostBold>
                     <TxtInria style={s.description}>{entreprise.description}</TxtInria>
-                <TouchableOpacity style={s.linkShow} onPress={() => navigation.navigate('Entreprise', {entrepriseId: entreprise.id})}>
-                    <ChevronRight color="#F9447F"/>
-                    <TxtJostSemiBold style={s.linkTxt}>View business page</TxtJostSemiBold>
-                </TouchableOpacity>
+                    <TouchableOpacity style={s.linkShow} onPress={() => navigation.navigate('Entreprise', {entrepriseId: entreprise.id})}>
+                        <ChevronRight color="#F9447F"/>
+                        <TxtJostSemiBold style={s.linkTxt}>View business page</TxtJostSemiBold>
+                    </TouchableOpacity>
+                </View>
+                <View style={s.containerRepresentative}>
+                    <TxtInriaBold style={s.titleRepresentatives}>Representatives</TxtInriaBold>
+                    <TxtInria>ICI METTRE PHOTO EMPLOYEE + ENTREPRENEURS</TxtInria>
                 </View>
             </ScrollView>
+            <ModalVisiblePro isVisible={modalVisiblePro} onClose={() => setModalVisiblePro(false)}>
+                <View>
+                    <Danger/>
+                </View>
+
+                <View>
+                    <TxtInria style={s.infoNotAccess}>You do not have access to the room list .</TxtInria>
+                </View>
+                <TouchableOpacity style={s.checkboxView}
+                    onPress={toggleCheckbox}
+                    activeOpacity={0.7}>
+                    <Checkbox 
+                        value={isChecked}
+                        onValueChange={setIsChecked}
+                        color={isChecked ? "#FBD160" : undefined}
+                        style={s.checkbox} />
+                    <TxtInriaItalic style={{marginLeft: 10, color: "#FFFFFF", fontSize: 14}}>I accept to appear in the list of people present at the event. If you check this box, you will also have access to the list of registered people.</TxtInriaItalic>
+                </TouchableOpacity>
+                <View style={s.viewBtn}>
+                    <TouchableOpacity style={s.btnConfirm} onPress={updateParticipation}>
+                        <TxtJostBold style={s.btntxt}>Confirm</TxtJostBold>
+                    </TouchableOpacity>
+                </View>
+            </ModalVisiblePro>
         </>
     )
 }
