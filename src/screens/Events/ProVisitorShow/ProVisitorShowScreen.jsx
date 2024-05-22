@@ -1,6 +1,6 @@
 import { s } from "./ProVisitorShowScreen.style";
 import { useContext, useEffect, useState } from "react";
-import { TxtInria } from "../../../components/TxtInria/TxtInria";
+import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
@@ -14,6 +14,10 @@ import Phone from "../../../assets/icons/Phone";
 import Mail from "../../../assets/icons/Mail";
 import Globe from "../../../assets/icons/Globe";
 import BlurredText from "../../../components/BlurredText";
+import Twitter from "../../../assets/icons/Twitter";
+import Linkedin from "../../../assets/icons/Linkedin";
+import Facebook from "../../../assets/icons/Facebook";
+import Instagram from "../../../assets/icons/Instagram";
 
 const ProVisitorShowScreen = ({ route, navigation }) => {
     const { userId } = route.params;
@@ -51,7 +55,6 @@ const ProVisitorShowScreen = ({ route, navigation }) => {
                     });
                     const data = response.data;
                     const userAttributes = data.user.data.attributes;
-                    console.log(userAttributes);
 
                     setUser(userAttributes);
                 }
@@ -73,23 +76,41 @@ const ProVisitorShowScreen = ({ route, navigation }) => {
                     </View>
                     <TxtInria style={s.name}>{user.first_name} {user.last_name}</TxtInria>
                     <View style={s.user_info}>
-                        <Phone color={"#7F95E4"} />
-                        <View>
-                            <TxtInria style={s.textflou}>{user.phone}</TxtInria>
-                            <BlurredText text={user.phone} style={s.blurContainer} />
-                        </View>
+                            <View style={s.textContainer}>
+                                <Phone color={"#7F95E4"} style={{ zIndex: 2}} />
+                                <BlurredText text={user.phone} style={s.blurContainer} />
+                                <TxtInria style={s.textflou}>{user.phone}</TxtInria>
+                            </View>
                     </View>
                     <View style={s.user_info}>
-                        <Mail color={"#7F95E4"} />
-                        <View>
-                            <TxtInria style={s.textflou}>{user.email}</TxtInria>
+                        <View style={s.textContainer}>
+                            <Mail color={"#7F95E4"} style={{ zIndex: 2}} />
                             <BlurredText text={user.email} style={s.blurContainer} />
+                            <TxtInria style={s.textflou}>{user.email}</TxtInria>
                         </View>
                     </View>
                     <View style={s.user_info}>
                         <Globe url={user.website} color={"#7F95E4"} />
                         <TxtInria style={s.info}>{user.website}</TxtInria>
                     </View>
+                    <View style={s.social}>
+                        <Twitter url={user.twitter} color="#FBD160"/>
+                        <Linkedin url={user.linkedin} color="#FBD160"/>
+                        <Facebook url={user.facebook} color="#FBD160"/>
+                        <Instagram url={user.instagram} color="#FBD160" />
+                    </View>
+                </View>
+                    <View style={s.border}></View>
+                <View style={s.detail}>
+                    <TxtInriaBold style={s.job}>{user.job ? user.job : "Job not specified"}</TxtInriaBold>
+                    <TxtInriaLight style={s.industry}>{user.industry ? user.industry : "Industry not specified"}</TxtInriaLight>
+                    <View style={s.company}>
+                        {/* Rediriger vers l'entreprise en question */}
+                        <TouchableOpacity>
+                            <TxtInria style={s.at}>At <TxtInriaBold style={s.nameCompany}>DannaCode</TxtInriaBold></TxtInria>
+                        </TouchableOpacity>
+                    </View>
+                    <TxtInria style={s.bio}>{user.biography}</TxtInria>
                 </View>
             </ScrollView>
         </>

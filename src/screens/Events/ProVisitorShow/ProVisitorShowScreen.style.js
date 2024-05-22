@@ -59,24 +59,80 @@ export const s = StyleSheet.create({
         textTransform: "capitalize"
     },
 
+
     user_info: {
         flexDirection: "row",
-        alignItems: "flex-end"
+        alignItems: "center", // Centrer verticalement
     },
 
 
-    textContainer: {
-        position: 'relative',
-        
+    blurContainer: {
+        position: 'absolute', // Utiliser position absolue pour couvrir le texte
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        overflow: 'hidden',
+        borderRadius: 5,
+        zIndex: 1
     },
 
     textflou: {
         zIndex: 0,
-        position: "absolute",
-        color: "#b4b3b3"
+        color: "#b4b3b3",
+        textAlign: "center"
+    },
+    textContainer: {
+        position: 'relative',
+        flex: 1,
+        alignItems: 'center', // Centrer le contenu horizontalement
+        justifyContent: 'center',
+        flexDirection: "row"
     },
 
+    social: {
+        flexDirection: "row",
+        alignItems: "center", // Centrer verticalement
+        marginVertical: 16
+    },
 
+    border: {
+        height: 0.5,
+        backgroundColor: "#F9447F",
+        marginBottom: 16
+    },
 
+    detail: {
+        marginHorizontal: 8
+    },
 
+    job: {
+        fontSize: 18
+    },
+
+    industry: {
+        fontSize: 13,
+        color: "#5B5B5B",
+        marginTop: 2
+    },
+
+    company: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 10
+    },
+
+    at: {
+        color: "#7F95E4",
+        fontSize: 14
+    },
+
+    nameCompany: {
+        fontSize: 15,
+        color: "#7F95E4"
+    },
+
+    bio: {
+        fontSize: 18
+    },
 })

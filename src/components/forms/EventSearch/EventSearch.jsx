@@ -8,7 +8,7 @@ import Search from "../../../assets/icons/Search";
 import * as Animatable from 'react-native-animatable';
 
 
-export const EventSearch = ({ onSearch, onTitleSearch, setEvents }) => {
+export const EventSearch = ({ onSearch, onTitleSearch }) => {
     const [country, setCountry] = useState('');
     const [region, setRegion] = useState('');
     const [city, setCity] = useState('');
