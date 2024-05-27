@@ -2,16 +2,14 @@ import { ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "re
 import { s } from "./RepertoireScreen.style";
 import { TxtInria } from "../../../components/TxtInria/TxtInria";
 import PlusCircle from "../../../assets/icons/PlusCircle";
-import Envelope from "../../../assets/icons/Envelope";
 import Spinner from "react-native-loading-spinner-overlay";
 import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
-import { ContactGroupsContext, ContactGroupsProvider } from "../../../context/ContactGroupsContext";
+import { ContactGroupsProvider } from "../../../context/ContactGroupsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { EventSearch } from "../../../components/forms/EventSearch/EventSearch";
 import { UserSearch } from "../../../components/forms/UserSearch/UserSearch";
 import Avatar from "../../../assets/icons/Avatar";
 
@@ -99,7 +97,7 @@ const RepertoireScreen = ({ navigation }) => {
                             ...user.attributes
                         });
                     });
-                    console.log(response.data.search_active);
+                    
                     included.filter(item => item.type === 'user_contact_group').forEach(ucg => {
                         if (!userContactGroupsMap.has(ucg.attributes.contact_group_id)) {
                             userContactGroupsMap.set(ucg.attributes.contact_group_id, []);
@@ -113,8 +111,7 @@ const RepertoireScreen = ({ navigation }) => {
                         userCount: group.attributes.user_count,
                         users: userContactGroupsMap.get(group.id) || []
                     }));
-                    console.log('Fetched Groups:', fetchedGroups);
-                    console.log('Users:', response.data.users); 
+                     
                     setContactGroups(fetchedGroups);
                     await AsyncStorage.setItem('contactGroups', JSON.stringify(fetchedGroups));
                 }
@@ -124,7 +121,6 @@ const RepertoireScreen = ({ navigation }) => {
         };
         fetchData();
     }, [userInfo.id, userToken])
-    console.log("users :",users.first_name);
     return (
         <>
             <Spinner/>
@@ -134,7 +130,7 @@ const RepertoireScreen = ({ navigation }) => {
                     <View style={s.container}>
                         {users.length > 0 ? (
                             users.map(user => (
-                                <TouchableOpacity key={`user-${user.id}`}>
+                                <TouchableOpacity key={`user-${user.id}`}  onPress={() => navigation.navigate("UserContactGroup", {userId: user.id})}>
                                     <View style={s.contactGroup}>
                                         <TxtInria>{user.first_name} {user.last_name}</TxtInria>
                                         <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
@@ -144,7 +140,7 @@ const RepertoireScreen = ({ navigation }) => {
                             ))
                         ) : (
                             contactGroups.map(group => (
-                                <TouchableOpacity key={`group-${group.id}`}>
+                                <TouchableOpacity key={`group-${group.id}`} onPress={() => navigation.navigate("ContactGroup", { groupId: group.id })}>
                                     <View style={s.contactGroup}>
                                         <TxtInria>{group.name}</TxtInria>
                                         <TxtInria style={s.count}>{group.userCount}</TxtInria>
