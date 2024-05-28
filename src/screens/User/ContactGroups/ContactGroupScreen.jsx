@@ -12,6 +12,7 @@ import axios from "axios";
 import Avatar from "../../../assets/icons/Avatar";
 import { showMessage } from "react-native-flash-message";
 import Garbage from "../../../assets/icons/Garbage";
+import Header from "../../../components/Header/Header";
 
 const ContactGroupScreen = ({ route, navigation }) => {
     const { groupId } = route.params;
@@ -50,36 +51,6 @@ const ContactGroupScreen = ({ route, navigation }) => {
         }
     }
 
-    const BackButton = (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeft/>
-        </TouchableOpacity>
-    )
-
-    const Delete = (
-        <TouchableOpacity>
-            {contactGroup.deleted ? (
-                <Garbage/>
-            ) : (
-                <View style={s.garbage}></View>
-            )}
-        </TouchableOpacity>
-    )
-
-    const header = (
-        <View style={s.container_header}>
-            <View style={s.header}>
-                {BackButton}
-                <View style={s.header_texts}>
-                    <TxtJost style={s.txtheader}>{contactGroup.name}</TxtJost>
-                </View>
-                {Delete}
-            </View>
-            <View style={s.header_nav}>
-                <UserSearch onUserSearch={onUserSearch} />
-            </View>
-        </View>
-    )
 
     useEffect(() => {
         const fetchData = async () => {
@@ -127,10 +98,18 @@ const ContactGroupScreen = ({ route, navigation }) => {
     return (
         <>
             <Spinner/>
-            {header}
+            <Header title={contactGroup.name}
+                onBackPress={() => navigation.goBack()}
+                showBackButton={true}
+                // showChatroom={!contactGroup || !contactGroup.deletable}
+                // onChatPress={() => navigation.navigate('ChatroomIndex', { userId: userInfo.id })}
+                showDelete={contactGroup && contactGroup.deletable}
+                onDeletePress={deleteContactGroup}>
+                <UserSearch onUserSearch={onUserSearch} />
+            </Header>
             <ScrollView>
                 {users.map(user => (
-                    <TouchableOpacity key={user.id} onPress={() => navigation.navigate("UserContactGroup", {userId: user.id})}>
+                    <TouchableOpacity key={user.id} onPress={() => navigation.navigate("UserContactGroup", {userId: user.id, groupId: contactGroup.id})}>
                         <View style={s.contactGroup}>
                             <TxtInria>{user.first_name} {user.last_name}</TxtInria>
                             <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />

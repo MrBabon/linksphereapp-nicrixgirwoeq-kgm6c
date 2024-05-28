@@ -23,7 +23,8 @@ import EntrepriseScreen from '../screens/Entreprises/EntrepriseScreen.jsx';
 import ProVisitorShowScreen from '../screens/Events/ProVisitorShow/ProVisitorShowScreen.jsx';
 import ContactGroupScreen from '../screens/User/ContactGroups/ContactGroupScreen.jsx';
 import UserContactGroupScreen from '../screens/User/UserContactGroup/UserContactGroupScreen.jsx';
-
+import ChatroomIndexScreen from '../screens/User/Chatroom/ChatroomIndex/ChatroomIndexScreen.jsx';
+import ChatroomShowScreen from '../screens/User/Chatroom/ChatroomShow/ChatroomShowScreen.jsx';
 
 const Stack = createStackNavigator();
 
@@ -73,6 +74,8 @@ const AppNavigator = () => {
                                 <Stack.Screen name="Repertoire" component={RepertoireScreen} />
                                 <Stack.Screen name="ContactGroup" component={ContactGroupScreen} />
                                 <Stack.Screen name="UserContactGroup" component={UserContactGroupScreen} />
+                                <Stack.Screen name="ChatroomIndex" component={ChatroomIndexScreen}/>
+                                <Stack.Screen name="ChatroomShow" component={ChatroomShowScreen}/>
                                 <Stack.Screen name="Scan" component={ScanScreen} />
                                 <Stack.Screen name="Events" component={EventIndexScreen} />
                                 <Stack.Screen name="Event" component={EventShowScreen} />

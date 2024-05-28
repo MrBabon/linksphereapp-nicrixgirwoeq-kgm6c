@@ -41,10 +41,10 @@ const Footer = ({ activePage, navigation }) => {
                             <TxtInria style={activePage === 'Repertoire' ? s.activeTxt : s.txt}>Groups</TxtInria>
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            style={activePage === 'Scan' ? s.activeBtn : s.btn}
-                            onPress={() => {navigation.navigate('Scan')}}>
-                            <Envelope color={activePage === 'Scan' ? '#1AC1B9' : '#3A3A3A'}/>
-                            <TxtInria style={activePage === 'Scan' ? s.activeTxt : s.txt}>Messages</TxtInria>
+                            style={activePage === 'ChatroomIndex' ? s.activeBtn : s.btn}
+                            onPress={() => {navigation.navigate('ChatroomIndex')}}>
+                            <Envelope color={activePage === 'ChatroomIndex' ? '#1AC1B9' : '#3A3A3A'}/>
+                            <TxtInria style={activePage === 'ChatroomIndex' ? s.activeTxt : s.txt}>Messages</TxtInria>
                         </TouchableOpacity>
                     </View>
             </ImageBackground>
