@@ -47,6 +47,12 @@ export const s = StyleSheet.create({
         marginBottom: 2
     },
 
+    share: {
+        position: "absolute",
+        top: 14,
+        left: 18
+    },
+
     avatar: {
         marginTop: 10,
         alignItems: "center",
@@ -92,6 +98,42 @@ export const s = StyleSheet.create({
         height: 1,
         marginTop: 16,
         backgroundColor: "#F9447F"
+    },
+
+    detail: {
+        marginHorizontal: 8,
+        marginTop: 10
+    },
+
+    job: {
+        fontSize: 18
+    },
+
+    industry: {
+        fontSize: 13,
+        color: "#5B5B5B",
+        marginTop: 2
+    },
+
+    company: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 10
+    },
+
+    at: {
+        color: "#7F95E4",
+        fontSize: 14
+    },
+
+    nameCompany: {
+        fontSize: 15,
+        color: "#7F95E4"
+    },
+
+    bio: {
+        fontSize: 18,
+        marginHorizontal: 8,
     },
 
 })

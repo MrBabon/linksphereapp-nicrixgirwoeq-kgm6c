@@ -1,5 +1,5 @@
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { TxtInria } from "../../../components/TxtInria/TxtInria";
+import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
 import { s } from "./UserContactGroupScreen.style";
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
 import { TxtJost } from "../../../components/TxtJost/TxtJost";
@@ -18,6 +18,7 @@ import Twitter from "../../../assets/icons/Twitter";
 import Linkedin from "../../../assets/icons/Linkedin";
 import Facebook from "../../../assets/icons/Facebook";
 import Instagram from "../../../assets/icons/Instagram";
+import Share from "../../../assets/icons/Share";
 
 const UserContactGroupScreen = ({ route, navigation }) => {
     const { userId, groupId } = route.params
@@ -62,6 +63,9 @@ const UserContactGroupScreen = ({ route, navigation }) => {
             </View>            
             <ScrollView>
                 <View style={s.container}>
+                    <View style={s.share}>
+                        <Share/>
+                    </View>
                     <View style={s.avatar}>
                         <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url}/>
                     </View>
@@ -87,6 +91,17 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                         <Instagram color="#FBD160" url={userInfo.instagram} />
                     </View>
                     <View style={s.border}></View>
+                    <View style={s.detail}>
+                        <TxtInriaBold style={s.job}>{user.job ? user.job : "Job not specified"}</TxtInriaBold>
+                        <TxtInriaLight style={s.industry}>{user.industry ? user.industry : "Industry not specified"}</TxtInriaLight>
+                        <View style={s.company}>
+                            {/* Rediriger vers l'entreprise en question */}
+                            <TouchableOpacity>
+                                <TxtInria style={s.at}>At <TxtInriaBold style={s.nameCompany}>DannaCode</TxtInriaBold></TxtInria>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <TxtInria style={s.bio}>{user.biography}</TxtInria>
                 </View>
             </ScrollView>
         </>
