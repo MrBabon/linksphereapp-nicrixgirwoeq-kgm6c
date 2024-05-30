@@ -1,6 +1,7 @@
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
 import { s } from "./UserContactGroupScreen.style";
+import * as Animatable from 'react-native-animatable';
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
 import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -19,12 +20,18 @@ import Linkedin from "../../../assets/icons/Linkedin";
 import Facebook from "../../../assets/icons/Facebook";
 import Instagram from "../../../assets/icons/Instagram";
 import Share from "../../../assets/icons/Share";
+import ChevronBottom from "../../../assets/icons/ChevronBottom";
 
 const UserContactGroupScreen = ({ route, navigation }) => {
     const { userId, groupId } = route.params
     const { userInfo, userToken } = useContext(AuthContext);
     const [user, setUser] = useState([]);
-    const [note, setNote] = useState([])
+    const [note, setNote] = useState([]);
+    const [visible, setVisible] = useState(false);
+
+    const toggleMenu = () => {
+      setVisible(!visible);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,10 +64,24 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                     showChatroom={true}
                     onChatPress={() => navigation.navigate('ChatroomShow', {userId: user.id})}/>
             <View style={s.contactgroups}>
-                <TouchableOpacity style={s.btngroup}>
-                    <TxtJost>Group</TxtJost>
+                <TouchableOpacity style={s.btngroup} onPress={toggleMenu}>
+                    <TxtJost style={s.txtbtngroup}>Group</TxtJost>
+                    <ChevronBottom style={[s.chevron, { transform: [{ rotate: visible ? '180deg' : '0deg' }] }]}/>
                 </TouchableOpacity>
-            </View>            
+            </View>        
+            <Animatable.View
+                style={s.menu}
+                animation={visible ? 'fadeInDown' : 'fadeOutUp'}
+                duration={300}>
+                    {visible && (
+                        <View style={s.menuItems}>
+                            <TxtJost style={s.menuItem}>Group 1</TxtJost>
+                            <TxtJost style={s.menuItem}>Group 2</TxtJost>
+                            <TxtJost style={s.menuItem}>Group 3</TxtJost>
+                            <TxtJost style={s.menuItem}>+ Add New Group</TxtJost>
+                        </View>
+                    )}
+                    </Animatable.View>    
             <ScrollView>
                 <View style={s.container}>
                     <View style={s.share}>

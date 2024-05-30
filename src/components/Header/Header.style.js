@@ -5,7 +5,7 @@ export const s = StyleSheet.create({
      // HEADER
 
      container_header: {
-        zIndex: 1
+        zIndex: 3
     },
 
     header: {
@@ -16,7 +16,7 @@ export const s = StyleSheet.create({
         height: 110,
         paddingTop: 60,
         paddingHorizontal: 14,
-        zIndex: 3
+        zIndex: 4
     },
 
     header_texts: {

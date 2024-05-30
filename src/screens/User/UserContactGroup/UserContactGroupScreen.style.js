@@ -6,7 +6,7 @@ export const s = StyleSheet.create({
     // HEADER
 
     container_header: {
-        zIndex: 1
+        zIndex: 3
     },
 
     header: {
@@ -40,11 +40,33 @@ export const s = StyleSheet.create({
         height: 140,
         backgroundColor: "#FBD160",
         justifyContent: "flex-end",
-        alignItems: "center"
+        alignItems: "center",
+        zIndex: 2
+
     },
 
     btngroup: {
-        marginBottom: 2
+        marginBottom: 2,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+
+    txtbtngroup: {
+        marginRight: 12,
+    },
+
+    chevron: {
+        marginTop: 4
+    },
+
+    menu: {
+        backgroundColor: '#FBD160',
+        position: "absolute",
+        width: "100%",
+        top: 56,
+        paddingHorizontal: 10,
+        paddingTop: 30,
+        zIndex: 1
     },
 
     share: {
