@@ -12,10 +12,14 @@ import { ContactGroupsProvider } from "../../../context/ContactGroupsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserSearch } from "../../../components/forms/UserSearch/UserSearch";
 import Avatar from "../../../assets/icons/Avatar";
+import { showMessage } from "react-native-flash-message";
+import { ModalContactGroup } from "../../../components/Modal/ModalContactGroup/ModalContactGroup";
+import { add } from "date-fns";
 
 const RepertoireScreen = ({ navigation }) => {
-    const {userInfo, userToken, isLoading} = useContext(AuthContext)
-    const [contactGroups, setContactGroups] = useState([])
+    const {userInfo, userToken, isLoading} = useContext(AuthContext);
+    const [contactGroups, setContactGroups] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
     const [searchActive, setSearchActive] = useState(false);
     const [users, setUsers] = useState([]);
 
@@ -29,7 +33,6 @@ const RepertoireScreen = ({ navigation }) => {
             fetchUsers('');
         }
     }
-
     const fetchUsers = async (queryString) => {
         try {
             const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire${queryString}`, {
@@ -49,10 +52,47 @@ const RepertoireScreen = ({ navigation }) => {
             console.error(e);
         }
     }
+    
+    const addContactGroup = async (groupName) => {
+        try {
+            const payload = {
+                contact_group: { name: groupName }
+            }
+            const response = await axios.post(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups`, payload, {
+                headers: { Authorization: userToken }
+            });
+            console.log("response", response.data);
+
+            if (response.status === 201 && response.data) {
+                setContactGroups(prevGroups => [...prevGroups, response.data]);
+
+                showMessage({
+                    message: "Groupe bien créé",
+                    type: "success",
+                    duration: 3000
+                });
+                setModalVisible(false);
+            }
+
+        console.log("Groupe bien créé", response.data);
+
+            console.log("Groupe bien créer", response.data);
+        }catch(e) {
+            console.error(e);
+        }
+    }
+
     const addButton = (
-        <TouchableOpacity>
-            <PlusCircle/>
-        </TouchableOpacity>
+        <>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <PlusCircle/>
+            </TouchableOpacity>
+            <ModalContactGroup
+                isVisible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={addContactGroup}
+            />
+        </>
     )
     const header = (
         <View style={s.container_header}>
@@ -76,6 +116,7 @@ const RepertoireScreen = ({ navigation }) => {
             </View>
         </View>
     )
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -121,6 +162,7 @@ const RepertoireScreen = ({ navigation }) => {
         };
         fetchData();
     }, [userInfo.id, userToken])
+
     return (
         <>
             <Spinner/>

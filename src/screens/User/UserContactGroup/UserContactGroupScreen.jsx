@@ -26,6 +26,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
     const { userId, groupId } = route.params
     const { userInfo, userToken } = useContext(AuthContext);
     const [user, setUser] = useState([]);
+    const [contactGroup, setContactGroup] = useState([]);
     const [note, setNote] = useState([]);
     const [visible, setVisible] = useState(false);
 
@@ -42,6 +43,12 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                             'Authorization': userToken
                         }
                     });
+                    const groups = response.data.contact_group.data;
+                    if (Array.isArray(groups) && groups.length > 0) {
+                        const deletableGroups = groups.filter(group => group.attributes.deletable);
+                        setContactGroup(deletableGroups);
+                    }
+                    
                     const user = response.data.user.data.attributes;
                     const note = response.data.user_contact_group.data.attributes;
                     setUser(user);
@@ -53,7 +60,6 @@ const UserContactGroupScreen = ({ route, navigation }) => {
         };
         fetchData();
     }, [userInfo.id, userToken, userId, groupId])
-
 
     return (
         <>
@@ -75,17 +81,23 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                 duration={300}>
                     {visible && (
                         <View style={s.menuItems}>
-                            <TxtJost style={s.menuItem}>Group 1</TxtJost>
-                            <TxtJost style={s.menuItem}>Group 2</TxtJost>
-                            <TxtJost style={s.menuItem}>Group 3</TxtJost>
-                            <TxtJost style={s.menuItem}>+ Add New Group</TxtJost>
+                            {contactGroup.map(group => (
+                                <TouchableOpacity key={group.id} onPress={() => navigation.navigate("UserContactGroup", {userId: user.id, groupId: group.id})}>
+                                    <TxtJost style={s.menuItem}>{group.attributes.name}</TxtJost>
+                                </TouchableOpacity>
+                            ))}
+                            <TouchableOpacity>
+                                <TxtJost style={s.menuItem}>+ Add New Group</TxtJost>
+                            </TouchableOpacity>
                         </View>
                     )}
-                    </Animatable.View>    
+            </Animatable.View>    
             <ScrollView>
                 <View style={s.container}>
                     <View style={s.share}>
-                        <Share/>
+                        <TouchableOpacity onPress={() => navigation.navigate("Profil")}>
+                            <Share/>
+                        </TouchableOpacity>
                     </View>
                     <View style={s.avatar}>
                         <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url}/>

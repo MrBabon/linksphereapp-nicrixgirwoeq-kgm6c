@@ -49,6 +49,8 @@ export const s = StyleSheet.create({
         marginBottom: 2,
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
     },
 
     txtbtngroup: {
@@ -62,17 +64,33 @@ export const s = StyleSheet.create({
     menu: {
         backgroundColor: '#FBD160',
         position: "absolute",
+        alignItems: "center",
         width: "100%",
         top: 56,
         paddingHorizontal: 10,
-        paddingTop: 30,
+        paddingTop: 100,
+        paddingBottom: 10,
         zIndex: 1
     },
+
+    menuItems: {
+        alignItems: "center",
+        width: "100%",
+        backgroundColor: "#F4F4F4",
+
+    },
+
+    menuItem: {
+        paddingVertical: 6,
+        fontSize: 16,
+        color: '#3A3A3A',
+      },
 
     share: {
         position: "absolute",
         top: 14,
-        left: 18
+        left: 18,
+        zIndex: 1
     },
 
     avatar: {

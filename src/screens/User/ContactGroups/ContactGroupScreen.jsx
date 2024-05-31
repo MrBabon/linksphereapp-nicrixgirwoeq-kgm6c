@@ -30,7 +30,6 @@ const ContactGroupScreen = ({ route, navigation }) => {
             fetchUsers('');
         }
     }
-
     const fetchUsers = async (queryString) => {
         try {
             const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}${queryString}`, {
@@ -50,6 +49,7 @@ const ContactGroupScreen = ({ route, navigation }) => {
             console.error(e);
         }
     }
+
 
 
     useEffect(() => {
