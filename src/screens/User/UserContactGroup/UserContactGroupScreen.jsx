@@ -35,10 +35,8 @@ const UserContactGroupScreen = ({ route, navigation }) => {
     const [visible, setVisible] = useState(false);
 
     const hasFetchedData = useRef(false);
-    console.log('Render UserContactGroupScreen');
 
     const fetchData = useCallback(async () => {
-        console.log('Fetching data');
         try {
             if (userInfo && userToken) {
                 const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/${userId}`, {
@@ -62,19 +60,16 @@ const UserContactGroupScreen = ({ route, navigation }) => {
             console.error(e);
         }
     }, [userInfo, userToken, groupId, userId]);
+    
+        useEffect(() => {
+            fetchData();
+        }, [fetchData]);
 
     useFocusEffect(
         useCallback(() => {
             fetchData();
         }, [fetchData])
     );
-
-    useEffect(() => {
-        if (!hasFetchedData.current) {
-            fetchData();
-            hasFetchedData.current = true;
-        }
-    }, [fetchData]);
 
     const addContactGroup = async (groupName) => {
         try {
@@ -111,11 +106,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
     };
 
 
-    if (!contactGroup.length || !user || !note) {
-        return <Text>Loading...</Text>;
-    }
 
-    console.log('contactGroups:', contactGroup);
     return (
         <>
             <Spinner/>
