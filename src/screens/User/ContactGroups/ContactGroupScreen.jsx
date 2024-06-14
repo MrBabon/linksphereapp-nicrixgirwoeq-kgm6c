@@ -76,21 +76,22 @@ const ContactGroupScreen = ({ route, navigation }) => {
 
     const deleteContactGroup = async () => {
         try {
-            const response = await axios.delete(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}${queryString}`, {
+            const response = await axios.delete(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}`, {
                 headers: { Authorization: userToken }
             });
             showMessage({
-                message: "Groupe de contact bien supprimé",
+                message: "Contact group deleted",
                 type: "success",
-                duration: 4000
+                duration: 2000
             });
+            
             navigation.navigate('Repertoire')
         } catch(e) {
             console.error(e);
             showMessage({
-                message: "Problème lors de la suppression du groupe",
+                message: "Problem deleting a group",
                 type: "alert",
-                duration: 4000
+                duration: 2000
             });
         }
     }
@@ -101,8 +102,8 @@ const ContactGroupScreen = ({ route, navigation }) => {
             <Header title={contactGroup.name}
                 onBackPress={() => navigation.goBack()}
                 showBackButton={true}
-                // showChatroom={!contactGroup || !contactGroup.deletable}
-                // onChatPress={() => navigation.navigate('ChatroomIndex', { userId: userInfo.id })}
+                showChatroom={!contactGroup || !contactGroup.deletable}
+                onChatPress={() => navigation.navigate('ChatroomIndex', { userId: userInfo.id })}
                 showDelete={contactGroup && contactGroup.deletable}
                 onDeletePress={deleteContactGroup}>
                 <UserSearch onUserSearch={onUserSearch} />

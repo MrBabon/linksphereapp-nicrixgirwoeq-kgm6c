@@ -10,7 +10,7 @@ export function ModalContactGroup({ isVisible, onClose, onConfirm }) {
 
     const handleConfirm = () => {
       onConfirm(groupName);
-      setGroupName(''); // Reset the input field
+      setGroupName('');
     };
 
     return(

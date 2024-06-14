@@ -4,7 +4,7 @@ import { TxtInria } from "../../../components/TxtInria/TxtInria";
 import PlusCircle from "../../../assets/icons/PlusCircle";
 import Spinner from "react-native-loading-spinner-overlay";
 import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
@@ -15,6 +15,7 @@ import Avatar from "../../../assets/icons/Avatar";
 import { showMessage } from "react-native-flash-message";
 import { ModalContactGroup } from "../../../components/Modal/ModalContactGroup/ModalContactGroup";
 import { add } from "date-fns";
+import { useFocusEffect } from "@react-navigation/native";
 
 const RepertoireScreen = ({ navigation }) => {
     const {userInfo, userToken, isLoading} = useContext(AuthContext);
@@ -67,7 +68,7 @@ const RepertoireScreen = ({ navigation }) => {
                 setContactGroups(prevGroups => [...prevGroups, response.data]);
 
                 showMessage({
-                    message: "Groupe bien créé",
+                    message: "Group added",
                     type: "success",
                     duration: 3000
                 });
@@ -76,9 +77,13 @@ const RepertoireScreen = ({ navigation }) => {
 
         console.log("Groupe bien créé", response.data);
 
-            console.log("Groupe bien créer", response.data);
         }catch(e) {
             console.error(e);
+            showMessage({
+                message: 'An error occured',
+                type: 'danger',
+                duration: 3000
+            });
         }
     }
 
@@ -117,51 +122,55 @@ const RepertoireScreen = ({ navigation }) => {
         </View>
     )
 
+    const fetchData = async () => {
+        try {
+            if (userInfo && userToken) {
+                const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire`, {
+                    headers: {
+                        'Authorization': userToken
+                    }
+                });
+                const data = response.data.repertoire.data;
+                const included = response.data.repertoire.included;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire`, {
-                        headers: {
-                            'Authorization': userToken
-                        }
+                const usersMap = new Map();
+                const userContactGroupsMap = new Map();
+                included.filter(item => item.type === 'user').forEach(user => {
+                    usersMap.set(user.id, {
+                        id: user.id,
+                        ...user.attributes
                     });
-                    const data = response.data.repertoire.data;
-                    const included = response.data.repertoire.included;
+                });
+                
+                included.filter(item => item.type === 'user_contact_group').forEach(ucg => {
+                    if (!userContactGroupsMap.has(ucg.attributes.contact_group_id)) {
+                        userContactGroupsMap.set(ucg.attributes.contact_group_id, []);
+                    }
+                    userContactGroupsMap.get(ucg.attributes.contact_group_id).push(usersMap.get(ucg.attributes.user_id));
+                });
 
-                    const usersMap = new Map();
-                    const userContactGroupsMap = new Map();
-                    included.filter(item => item.type === 'user').forEach(user => {
-                        usersMap.set(user.id, {
-                            id: user.id,
-                            ...user.attributes
-                        });
-                    });
-                    
-                    included.filter(item => item.type === 'user_contact_group').forEach(ucg => {
-                        if (!userContactGroupsMap.has(ucg.attributes.contact_group_id)) {
-                            userContactGroupsMap.set(ucg.attributes.contact_group_id, []);
-                        }
-                        userContactGroupsMap.get(ucg.attributes.contact_group_id).push(usersMap.get(ucg.attributes.user_id));
-                    });
-
-                    const fetchedGroups = included.filter(item => item.type === 'contact_group').map(group => ({
-                        id: group.id,
-                        name: group.attributes.name,
-                        userCount: group.attributes.user_count,
-                        users: userContactGroupsMap.get(group.id) || []
-                    }));
-                     
-                    setContactGroups(fetchedGroups);
-                    await AsyncStorage.setItem('contactGroups', JSON.stringify(fetchedGroups));
-                }
-            } catch (error) {
-                console.log(error);
+                const fetchedGroups = included.filter(item => item.type === 'contact_group').map(group => ({
+                    id: group.id,
+                    name: group.attributes.name,
+                    userCount: group.attributes.user_count,
+                    users: userContactGroupsMap.get(group.id) || []
+                }));
+                 
+                setContactGroups(fetchedGroups);
+                await AsyncStorage.setItem('contactGroups', JSON.stringify(fetchedGroups));
             }
-        };
-        fetchData();
-    }, [userInfo.id, userToken])
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [userInfo.id, userToken])
+    );
+
+
 
     return (
         <>

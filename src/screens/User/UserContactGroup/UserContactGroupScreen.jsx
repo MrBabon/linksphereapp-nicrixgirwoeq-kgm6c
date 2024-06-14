@@ -1,4 +1,4 @@
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
 import { s } from "./UserContactGroupScreen.style";
 import * as Animatable from 'react-native-animatable';
@@ -7,7 +7,7 @@ import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
 import Send from "../../../assets/icons/Send";
 import Header from "../../../components/Header/Header";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
@@ -21,46 +21,101 @@ import Facebook from "../../../assets/icons/Facebook";
 import Instagram from "../../../assets/icons/Instagram";
 import Share from "../../../assets/icons/Share";
 import ChevronBottom from "../../../assets/icons/ChevronBottom";
+import { ModalContactGroup } from "../../../components/Modal/ModalContactGroup/ModalContactGroup";
+import { useFocusEffect } from "@react-navigation/native";
+import { showMessage } from "react-native-flash-message";
 
 const UserContactGroupScreen = ({ route, navigation }) => {
     const { userId, groupId } = route.params
     const { userInfo, userToken } = useContext(AuthContext);
     const [user, setUser] = useState([]);
     const [contactGroup, setContactGroup] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
     const [note, setNote] = useState([]);
     const [visible, setVisible] = useState(false);
 
-    const toggleMenu = () => {
-      setVisible(!visible);
-    };
+    const hasFetchedData = useRef(false);
+    console.log('Render UserContactGroupScreen');
+
+    const fetchData = useCallback(async () => {
+        console.log('Fetching data');
+        try {
+            if (userInfo && userToken) {
+                const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/${userId}`, {
+                    headers: {
+                        'Authorization': userToken
+                    }
+                });
+                const groups = response.data.contact_group.data;
+                if (Array.isArray(groups) && groups.length > 0) {
+                    const deletableGroups = groups.filter(group => group.attributes.deletable);
+                    const formattedGroups = deletableGroups.map(group => ({ id: group.id, ...group.attributes }));
+                    setContactGroup(formattedGroups);
+                }
+                
+                const user = response.data.user.data.attributes;
+                const note = response.data.user_contact_group.data.attributes;
+                setUser(user);
+                setNote(note);
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }, [userInfo, userToken, groupId, userId]);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [fetchData])
+    );
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/${userId}`, {
-                        headers: {
-                            'Authorization': userToken
-                        }
-                    });
-                    const groups = response.data.contact_group.data;
-                    if (Array.isArray(groups) && groups.length > 0) {
-                        const deletableGroups = groups.filter(group => group.attributes.deletable);
-                        setContactGroup(deletableGroups);
-                    }
-                    
-                    const user = response.data.user.data.attributes;
-                    const note = response.data.user_contact_group.data.attributes;
-                    setUser(user);
-                    setNote(note);
-                }
-            } catch(e) {
-                console.error(e);
-            }
-        };
-        fetchData();
-    }, [userInfo.id, userToken, userId, groupId])
+        if (!hasFetchedData.current) {
+            fetchData();
+            hasFetchedData.current = true;
+        }
+    }, [fetchData]);
 
+    const addContactGroup = async (groupName) => {
+        try {
+            const payload = {
+                contact_group: { name: groupName }
+            };
+            const response = await axios.post(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups`, payload, {
+                headers: { Authorization: userToken }
+            });
+            console.log("Full response: => ",response.data);
+            if (response.status === 201 && response.data) {
+                const newGroup = { id: response.data.id, name: response.data.name, ...response.data.attributes };
+                console.log('New group:', newGroup);
+                setContactGroup(prevGroups => [...prevGroups, newGroup]);
+            }
+            showMessage({
+                message: 'Group added',
+                type: 'success',
+                duration: 3000
+            });
+            setModalVisible(false);
+        } catch (e) {
+            console.error(e);
+            showMessage({
+                message: 'An error occured',
+                type: 'danger',
+                duration: 3000
+            });
+        }
+    }
+
+    const toggleMenu = () => {
+        setVisible(!visible);
+    };
+
+
+    if (!contactGroup.length || !user || !note) {
+        return <Text>Loading...</Text>;
+    }
+
+    console.log('contactGroups:', contactGroup);
     return (
         <>
             <Spinner/>
@@ -82,13 +137,16 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                     {visible && (
                         <View style={s.menuItems}>
                             {contactGroup.map(group => (
-                                <TouchableOpacity key={group.id} onPress={() => navigation.navigate("UserContactGroup", {userId: user.id, groupId: group.id})}>
-                                    <TxtJost style={s.menuItem}>{group.attributes.name}</TxtJost>
+                                <TouchableOpacity key={group.id} onPress={() => navigation.navigate("ContactGroup", {userId: user.id, groupId: group.id})}>
+                                    <TxtJost style={s.menuItem}>{group.name}</TxtJost>
                                 </TouchableOpacity>
                             ))}
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => setModalVisible(true)}>
                                 <TxtJost style={s.menuItem}>+ Add New Group</TxtJost>
                             </TouchableOpacity>
+                            <ModalContactGroup isVisible={modalVisible} 
+                                            onClose={() => setModalVisible(false)} 
+                                            onConfirm={addContactGroup}/>
                         </View>
                     )}
             </Animatable.View>    
