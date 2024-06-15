@@ -174,13 +174,18 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                     </View>
                     <View style={s.border}></View>
                     <View style={s.detail}>
-                        <TxtInriaBold style={s.job}>{user.job ? user.job : "Job not specified"}</TxtInriaBold>
-                        <TxtInriaLight style={s.industry}>{user.industry ? user.industry : "Industry not specified"}</TxtInriaLight>
-                        <View style={s.company}>
-                            {/* Rediriger vers l'entreprise en question */}
-                            <TouchableOpacity>
-                                <TxtInria style={s.at}>At <TxtInriaBold style={s.nameCompany}>DannaCode</TxtInriaBold></TxtInria>
-                            </TouchableOpacity>
+                        <View style={s.note}>
+                            <TxtInria style={s.txtNote}>Personal Note</TxtInria>
+                        </View>
+                        <View style={s.detailTxt}>
+                            <TxtInriaBold style={s.job}>{user.job ? user.job : "Job not specified"}</TxtInriaBold>
+                            <TxtInriaLight style={s.industry}>{user.industry ? user.industry : "Industry not specified"}</TxtInriaLight>
+                            <View style={s.company}>
+                                {/* Rediriger vers l'entreprise en question */}
+                                <TouchableOpacity>
+                                    <TxtInria style={s.at}>At <TxtInriaBold style={s.nameCompany}>DannaCode</TxtInriaBold></TxtInria>
+                                </TouchableOpacity>
+                        </View>
                         </View>
                     </View>
                     <TxtInria style={s.bio}>{user.biography}</TxtInria>

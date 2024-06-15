@@ -140,9 +140,27 @@ export const s = StyleSheet.create({
         backgroundColor: "#F9447F"
     },
 
-    detail: {
+
+    detailTxt: {
         marginHorizontal: 8,
         marginTop: 10
+    },
+    note: {
+        position: "absolute",
+        right: 0,
+        top: 0,
+        backgroundColor: "#FBD160",
+        width: 110,
+        height: 30,
+        borderBottomLeftRadius: 15,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+
+    txtNote: {
+        fontSize: 14,
+        color: "#3A3A3A",
+        fontWeight: "bold"
     },
 
     job: {
