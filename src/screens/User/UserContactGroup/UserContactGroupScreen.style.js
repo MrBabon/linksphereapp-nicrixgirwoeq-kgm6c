@@ -143,9 +143,11 @@ export const s = StyleSheet.create({
 
     detailTxt: {
         marginHorizontal: 8,
-        marginTop: 10
+        marginTop: 30,
+        width: "auto",
     },
-    note: {
+
+    standView: {
         position: "absolute",
         right: 0,
         top: 0,
@@ -157,14 +159,21 @@ export const s = StyleSheet.create({
         justifyContent: "center"
     },
 
+    note: {
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+    },
+
     txtNote: {
         fontSize: 14,
         color: "#3A3A3A",
-        fontWeight: "bold"
+        fontWeight: "bold",
+        textAlign: "center"
     },
 
     job: {
-        fontSize: 18
+        fontSize: 18,
     },
 
     industry: {

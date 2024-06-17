@@ -174,8 +174,10 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                     </View>
                     <View style={s.border}></View>
                     <View style={s.detail}>
-                        <View style={s.note}>
-                            <TxtInria style={s.txtNote}>Personal Note</TxtInria>
+                        <View style={s.standView}>
+                            <TouchableOpacity style={s.note}>
+                                <TxtInria style={s.txtNote}>Personal Note</TxtInria>
+                            </TouchableOpacity>
                         </View>
                         <View style={s.detailTxt}>
                             <TxtInriaBold style={s.job}>{user.job ? user.job : "Job not specified"}</TxtInriaBold>
