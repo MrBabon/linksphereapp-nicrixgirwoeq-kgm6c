@@ -1,13 +1,11 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
 import { s } from "./UserContactGroupScreen.style";
 import * as Animatable from 'react-native-animatable';
-import ChevronLeft from "../../../assets/icons/ChevronLeft";
 import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
-import Send from "../../../assets/icons/Send";
 import Header from "../../../components/Header/Header";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
@@ -34,7 +32,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
     const [note, setNote] = useState([]);
     const [visible, setVisible] = useState(false);
 
-    const hasFetchedData = useRef(false);
+
 
     const fetchData = useCallback(async () => {
         try {
@@ -52,7 +50,8 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                 }
                 
                 const user = response.data.user.data.attributes;
-                const note = response.data.user_contact_group.data.attributes;
+                const data = response.data.user_contact_group.data.attributes;
+                const note = data.personal_note;
                 setUser(user);
                 setNote(note);
             }
@@ -82,7 +81,6 @@ const UserContactGroupScreen = ({ route, navigation }) => {
             console.log("Full response: => ",response.data);
             if (response.status === 201 && response.data) {
                 const newGroup = { id: response.data.id, name: response.data.name, ...response.data.attributes };
-                console.log('New group:', newGroup);
                 setContactGroup(prevGroups => [...prevGroups, newGroup]);
             }
             showMessage({
@@ -100,6 +98,47 @@ const UserContactGroupScreen = ({ route, navigation }) => {
             });
         }
     }
+
+    const addUserToGroup = async (userId, groupId, personalNote) => {
+        try {
+            const payload = {
+                user_contact_group: { user_id: userId, contact_group_id: groupId, personal_note: personalNote }
+            };
+
+            const response = await axios.post(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/add_to_group`, payload, {
+                headers: { Authorization: userToken }
+            });
+            if (response.status === 201 && response.data) {
+                showMessage({
+                    message: 'User added to group',
+                    type: 'success',
+                    duration: 3000
+                });
+            } else if (response.status === 200 && response.data.message === 'User already in group') {
+                showMessage({
+                    message: 'User already in group',
+                    type: 'info',
+                    duration: 3000
+                });
+            }
+            toggleMenu();
+        } catch (e) {
+            console.error(e);
+            showMessage({
+                message: 'An error occured',
+                type: 'danger',
+                duration: 3000
+            });
+        }
+    }
+
+    const handleGroupClick = async (groupId) => {
+        try {
+            await addUserToGroup(user.id, groupId, note);
+        } catch (error) {
+            console.error("Erreur lors de l'ajout de l'utilisateur au groupe", error);
+        }
+    };
 
     const toggleMenu = () => {
         setVisible(!visible);
@@ -128,7 +167,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                     {visible && (
                         <View style={s.menuItems}>
                             {contactGroup.map(group => (
-                                <TouchableOpacity key={group.id} onPress={() => navigation.navigate("ContactGroup", {userId: user.id, groupId: group.id})}>
+                                <TouchableOpacity key={group.id} onPress={() => handleGroupClick(group.id)}>
                                     <TxtJost style={s.menuItem}>{group.name}</TxtJost>
                                 </TouchableOpacity>
                             ))}
