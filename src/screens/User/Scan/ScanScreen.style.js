@@ -31,8 +31,31 @@ export const s = StyleSheet.create({
     // BODY
 
     container: {
-        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'column',
         justifyContent: 'center',
-        marginTop: 80
+        alignItems: 'center',
+    },
+
+    qr: {
+        marginBottom: 10
+    },
+
+    camera: {
+        height: 200,
+        width: '100%',
+        justifyContent: 'flex-end',
+    },
+    button: {
+        flex: 0.1,
+        alignSelf: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        padding: 10,
+        margin: 10,
+    },
+    text: {
+        fontSize: 18,
+        color: 'black',
     },
 })
