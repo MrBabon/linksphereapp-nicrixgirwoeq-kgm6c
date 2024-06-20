@@ -24,7 +24,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { showMessage } from "react-native-flash-message";
 
 const UserContactGroupScreen = ({ route, navigation }) => {
-    const { userId, groupId } = route.params
+    const { userContactgroupId, groupId, userId } = route.params
     const { userInfo, userToken } = useContext(AuthContext);
     const [user, setUser] = useState([]);
     const [contactGroup, setContactGroup] = useState([]);
@@ -58,7 +58,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
         } catch(e) {
             console.error(e);
         }
-    }, [userInfo, userToken, groupId, userId]);
+    }, [userInfo, userToken, groupId, userContactgroupId]);
     
         useEffect(() => {
             fetchData();

@@ -1,5 +1,5 @@
 import { s } from "./ScanScreen.style";
-import { Alert, Button, Image, Linking, TouchableOpacity, View } from "react-native";
+import { Alert, Button, Image, Linking, ScrollView, ScrollViewBase, TouchableOpacity, View } from "react-native";
 import { TxtInria } from "../../../components/TxtInria/TxtInria";
 import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -12,7 +12,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 
 
 const ScanScreen = ({ navigation }) => {
-    const {userInfo, userToken, isLoading} = useContext(AuthContext);
+    const {userInfo, userToken, isLoading, groupId} = useContext(AuthContext);
     const [qrCode, setQrCode] = useState('');
     const [facing, setFacing] = useState('back');
     const [permission, requestPermission] = useCameraPermissions();
@@ -56,17 +56,31 @@ const ScanScreen = ({ navigation }) => {
         fetchData();
     }, [userInfo, userToken]);
 
-
-    const handleBarCodeScanned = ({ data }) => {
+    console.log(groupId);
+    const handleBarCodeScanned = async ({ data }) => {
         setScanned(true);
-        const urlPattern = /http:\/\/192\.168\.1\.13:3000\/users\/(\d+)/;
-        const match = data.match(urlPattern);
-        if (match) {
-            const userId = match[1];
-            navigation.navigate('ProVisitor', { userId });
-        } else {
-            Alert.alert('QR Code Scanné (else)', `Data: ${data}`);
-        }
+        if (data.startsWith('http://') || data.startsWith('https://')) {
+            const url = new URL(data);
+            const userId = url.searchParams.get('user_id');
+            if (userId) {
+                try {
+                    const payload = {
+                        user_contact_group: { user_id: userId }
+                    }
+                    const response = await axios.post(`${BASE_URL}users/${userInfo.id}/user_contact_groups`, payload, {
+                            headers: { Authorization: userToken }
+                        }
+                    );
+                    const userContactgroupId = response.data.data.id;
+                    console.log('UserContactGroup created:', userContactgroupId);
+                    console.log(groupId);
+                    navigation.navigate('UserContactGroup', { userContactgroupId, groupId, userId });
+                } catch (error) {
+                    console.error('Error navigating to ProVisitor:', error);
+                }
+              navigation.navigate('ProVisitor', { userId });
+            }
+        } 
     };
     
     if (!permission) {
@@ -91,27 +105,29 @@ const ScanScreen = ({ navigation }) => {
             <Spinner visible={isLoading}/>
             {header}
             <View style={s.container}>
-                <View style={s.qr}>
-                    {qrCode ? (
-                        <QRCode 
-                            
-                            logo={{uri: base64Logo}}
-                            backgroundColor="transparent"
-                            logoSize={350}
-                            logoBackgroundColor="transparent"
-                            size={220} />
-                    ) : (
-                        <TxtInria>Qr Code not available</TxtInria>
-                    )}
-                </View>
                 <CameraView 
                         style={s.camera}
                         facing={facing}
                         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
                         barcodeScannerSettings={{ 
                             barcodeTypes: ["qr"],
-                        }} 
+                            }} 
                 />
+                <ScrollView>
+                            <View style={s.qr}>
+                                {qrCode ? (
+                                    <QRCode 
+                                        
+                                        logo={{uri: base64Logo}}
+                                        backgroundColor="transparent"
+                                        logoSize={300}
+                                        logoBackgroundColor="transparent"
+                                        size={200} />
+                                ) : (
+                                    <TxtInria>Qr Code not available</TxtInria>
+                                )}
+                            </View>
+                </ScrollView>
             </View>
         </>
     )

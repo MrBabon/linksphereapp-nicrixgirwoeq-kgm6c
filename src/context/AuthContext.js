@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     const [activePage, setActivePage] = useState('Home');
     const [isLoading, setIsLoading] = useState(false);
     const [splashLoading, setSplashLoading] = useState(false);
+    const [groupId, setgroupId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
 
     
@@ -185,6 +186,27 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(false);
         }
     };
+
+    const fetchContactGroup = async () => {
+        if (userInfo && userToken) {
+            try {
+                const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire`, {
+                    headers: { Authorization: userToken }
+                });
+                console.log('API response:', response.data);
+                const included = response.data.repertoire.included;
+                const contactGroup = included.find(group => group.type === 'contact_group' && group.attributes.name === 'Everyone');
+                if (contactGroup) {
+                    setgroupId(contactGroup.id);
+                    await AsyncStorage.setItem('groupId', contactGroup.id);
+                } else {
+                    console.error('Contact group "Everyone" not found');
+                }
+            } catch (error) {
+                console.error('Error fetching contact group ID:', error);
+            }
+        }
+    }
     
     const isLoggedIn = async () => {
         try {
@@ -196,6 +218,7 @@ export const AuthProvider = ({ children }) => {
                 setUserInfo(userInfo)
                 setUserToken(userToken)
             }
+            await fetchContactGroup(); 
             setSplashLoading(false);
         } catch(e) {
             setSplashLoading(false);
@@ -215,6 +238,7 @@ export const AuthProvider = ({ children }) => {
                 userToken,
                 activePage,
                 splashLoading,
+                groupId,
                 errorMessage,
                 register,
                 login,

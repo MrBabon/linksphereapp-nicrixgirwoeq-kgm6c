@@ -33,18 +33,21 @@ export const s = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
 
+
+
     qr: {
-        marginBottom: 10
+        marginTop: 10,
     },
 
     camera: {
-        height: 200,
+        height: 250,
         width: '100%',
         justifyContent: 'flex-end',
+        marginTop: 100
     },
     button: {
         flex: 0.1,
