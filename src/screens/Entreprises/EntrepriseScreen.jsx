@@ -38,7 +38,7 @@ const EntrepriseScreen = ({ route, navigation }) => {
                 <Image source={{uri: entreprise.banner_url}} style={s.banner}  onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
                 <View style={s.standView}>
                         <TouchableOpacity style={s.btnsend}>
-                            <TxtInria style={s.send}>Send us yout details</TxtInria>
+                            <TxtInria style={s.send}>Send us your details</TxtInria>
                         </TouchableOpacity>
                 </View>
             </View>

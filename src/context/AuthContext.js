@@ -84,6 +84,7 @@ export const AuthProvider = ({ children }) => {
             setUserToken(token);
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             AsyncStorage.setItem('userToken', token);
+            
             setIsLoading(false);
         }).catch(e => {
             console.log(`Login error ${e}`);
@@ -213,10 +214,12 @@ export const AuthProvider = ({ children }) => {
             setSplashLoading(true);
             let userInfo = await AsyncStorage.getItem('userInfo');
             let userToken = await AsyncStorage.getItem('userToken');
+            let groupId = await AsyncStorage.getItem('groupId');
             userInfo = JSON.parse(userInfo);
             if(userInfo) {
                 setUserInfo(userInfo)
                 setUserToken(userToken)
+                setgroupId(groupId)
             }
             await fetchContactGroup(); 
             setSplashLoading(false);

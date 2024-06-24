@@ -78,7 +78,6 @@ const ScanScreen = ({ navigation }) => {
                 } catch (error) {
                     console.error('Error navigating to ProVisitor:', error);
                 }
-              navigation.navigate('ProVisitor', { userId });
             }
         } 
     };
