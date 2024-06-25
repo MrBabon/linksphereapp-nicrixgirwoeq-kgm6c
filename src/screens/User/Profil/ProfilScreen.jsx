@@ -4,8 +4,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
 import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
-import { Button, View, TouchableOpacity, ScrollView } from "react-native";
-// LOGO
+import { View, TouchableOpacity, ScrollView } from "react-native";
 import Settings from '../../../assets/icons/Settings';
 import Avatar from "../../../assets/icons/Avatar";
 import Phone from "../../../assets/icons/Phone";
@@ -15,15 +14,13 @@ import Twitter from "../../../assets/icons/Twitter";
 import Instagram from "../../../assets/icons/Instagram";
 import Linkedin from "../../../assets/icons/Linkedin";
 import Facebook from "../../../assets/icons/Facebook";
-import Envelope from "../../../assets/icons/Envelope";
-import axios from "axios";
 import api from "../../../config";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const ProfilScreen = ({ navigation }) => {
     const {userInfo, userToken, isLoading} = useContext(AuthContext);
     const [avatar, setAvatar] = useState(null);
+
 
     const settingButton = (
         <TouchableOpacity onPress={() => navigation.navigate('Settings')}>

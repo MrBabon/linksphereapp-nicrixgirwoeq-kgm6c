@@ -40,6 +40,7 @@ const SettingsScreen = ({ navigation }) => {
 
     return (
         <>
+            <Spinner visible={isLoading}/>
             {header}
             <ScrollView>
                 <View style={s.container}>
@@ -112,7 +113,7 @@ const SettingsScreen = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
                         <View style={s.container_log_out}>
-                            <TouchableOpacity style={s.btn_log_out} onPress={logout}>
+                            <TouchableOpacity style={s.btn_log_out} onPress={() => logout(navigation)}>
                                 <DoorExit />
                                 <TxtInriaBold style={s.txt_log_out}>LOG OUT</TxtInriaBold>
                             </TouchableOpacity>

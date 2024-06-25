@@ -17,7 +17,13 @@ export const setAuthInterceptor = (logout) => {
       response => response,
       async error => {
         if (error.response && error.response.status === 401) {
-          await AsyncStorage.removeItem('token'); // Supprimez le token JWT
+          const originalRequest = error.config;
+          // Vérifier si c'est une tentative de connexion
+          if (originalRequest.url.includes('/login')) {
+            // Si c'est une tentative de connexion, ne pas exécuter logout()
+            return Promise.reject(error);
+          }
+          await AsyncStorage.removeItem('userToken'); // Supprimez le token JWT
           Alert.alert('Session expirée', 'Votre session a expiré. Veuillez vous reconnecter.');
           logout();
         }

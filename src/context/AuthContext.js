@@ -14,11 +14,19 @@ export const AuthProvider = ({ children }) => {
     const [splashLoading, setSplashLoading] = useState(false);
     const [groupId, setGroupId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
+    
 
 
     useEffect(() => {
         setAuthInterceptor(logout);
     }, []);
+
+    useEffect(() => {
+        if (userInfo && userToken) {
+            fetchContactGroup();
+        }
+    }, [userInfo, userToken]);
+
     
     const register = (firstName, lastName, phone, email, password, confirmPassword) => {
         // Une fois le formulaire envoyé la page ce met en chargement le temps d'envoyer les infos
@@ -68,6 +76,8 @@ export const AuthProvider = ({ children }) => {
         })
     };
 
+
+
     const login = async (email, password) => {
         setIsLoading(true);
 
@@ -88,13 +98,14 @@ export const AuthProvider = ({ children }) => {
             setUserToken(token);
             await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             await AsyncStorage.setItem('userToken', token);
-            await fetchContactGroup(userInfo, token);
+            await fetchContactGroup();
             setIsLoading(false);
             showMessage({
               message: "Login Successful",
               type: "success",
               duration: 4000
             });
+        
         } catch(e) {
             console.error(`Login error ${e}`);
             setIsLoading(false);
@@ -107,17 +118,16 @@ export const AuthProvider = ({ children }) => {
         };
     }
 
-    const logout = async () => {
+    const logout = async (navigation) => {
         setIsLoading(true);
-
         try {
             await api.delete('/logout', {
               headers: { Authorization: userToken }
             });
-            await AsyncStorage.removeItem('userInfo');
+            // await AsyncStorage.removeItem('userInfo');
             await AsyncStorage.removeItem('userToken');
             await AsyncStorage.removeItem('groupId');
-            setUserInfo(null);
+            // setUserInfo(null);
             setUserToken(null);
             setGroupId(null);
             setIsLoading(false);
@@ -126,7 +136,8 @@ export const AuthProvider = ({ children }) => {
               type: "success",
               duration: 4000
             });
-          } catch (e) {
+            navigation.navigate('Home');
+        } catch (e) {
             console.error(`Logout error:`, e);
             setIsLoading(false);
             showMessage({
@@ -135,7 +146,7 @@ export const AuthProvider = ({ children }) => {
               type: "danger",
               duration: 4000
             });
-          }
+        }
     }
     
 

@@ -118,7 +118,7 @@ const ScanScreen = ({ navigation }) => {
                                         
                                         logo={{uri: base64Logo}}
                                         backgroundColor="transparent"
-                                        logoSize={300}
+                                        logoSize={220}
                                         logoBackgroundColor="transparent"
                                         size={200} />
                                 ) : (
