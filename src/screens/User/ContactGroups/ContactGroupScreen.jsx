@@ -32,7 +32,7 @@ const ContactGroupScreen = ({ route, navigation }) => {
     }
     const fetchUsers = async (queryString) => {
         try {
-            const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}${queryString}`, {
+            const response = await api.get(`/users/${userInfo.id}/repertoire/contact_groups/${groupId}${queryString}`, {
                 headers: { Authorization: userToken }
             });
             let allUsers = response.data.users;
@@ -76,7 +76,7 @@ const ContactGroupScreen = ({ route, navigation }) => {
 
     const deleteContactGroup = async () => {
         try {
-            const response = await axios.delete(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}`, {
+            const response = await api.delete(`/users/${userInfo.id}/repertoire/contact_groups/${groupId}`, {
                 headers: { Authorization: userToken }
             });
             showMessage({

@@ -1,6 +1,5 @@
-import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import { BASE_URL } from '../config';
+import api, { setAuthInterceptor } from '../config';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showMessage } from "react-native-flash-message";
 
@@ -13,14 +12,18 @@ export const AuthProvider = ({ children }) => {
     const [activePage, setActivePage] = useState('Home');
     const [isLoading, setIsLoading] = useState(false);
     const [splashLoading, setSplashLoading] = useState(false);
-    const [groupId, setgroupId] = useState(null);
+    const [groupId, setGroupId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
 
+
+    useEffect(() => {
+        setAuthInterceptor(logout);
+    }, []);
     
     const register = (firstName, lastName, phone, email, password, confirmPassword) => {
         // Une fois le formulaire envoyé la page ce met en chargement le temps d'envoyer les infos
         setIsLoading(true);
-        axios.post(`${BASE_URL}signup`, {
+        api.post(`/signup`, {
             user: {
                 first_name: firstName,
                 last_name: lastName,
@@ -65,30 +68,35 @@ export const AuthProvider = ({ children }) => {
         })
     };
 
-    const login = (email, password) => {
+    const login = async (email, password) => {
         setIsLoading(true);
 
-        axios.post(`${BASE_URL}login`, {
-            user: {
+        try {
+            const response = await api.post('/login', {
+              user: {
                 email: email,
                 password: password
-            }
-        }, {
-            headers: {
+              }
+            }, {
+              headers: {
                 'Content-Type': 'application/json'
-            }
-        }).then(res => {
-            let userInfo = res.data.data;
-            let token = res.headers['authorization'];
+              }
+            });
+            let userInfo = response.data.data;
+            let token = response.headers['authorization'];
             setUserInfo(userInfo);
             setUserToken(token);
-            AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-            AsyncStorage.setItem('userToken', token);
-            
+            await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+            await AsyncStorage.setItem('userToken', token);
+            await fetchContactGroup(userInfo, token);
             setIsLoading(false);
-        }).catch(e => {
-            console.log(`Login error ${e}`);
-            console.log(e.response.data);
+            showMessage({
+              message: "Login Successful",
+              type: "success",
+              duration: 4000
+            });
+        } catch(e) {
+            console.error(`Login error ${e}`);
             setIsLoading(false);
             showMessage({
                 message: "Login Error",
@@ -96,31 +104,43 @@ export const AuthProvider = ({ children }) => {
                 type: "danger",
                 duration: 4000
             });
-        });
+        };
     }
 
-    const logout = () => {
+    const logout = async () => {
         setIsLoading(true);
-        console.log("Token being sent on logout:", userToken);
-        axios.delete(`${BASE_URL}logout`, {
-            headers: { Authorization: `${userToken}` } // Mettez les headers dans le deuxième paramètre directement
-        }).then(res => {
-            console.log("Logout successful:", res.data);
-            AsyncStorage.removeItem('userInfo');
-            AsyncStorage.removeItem('userToken');
-            setUserInfo({});
+
+        try {
+            await api.delete('/logout', {
+              headers: { Authorization: userToken }
+            });
+            await AsyncStorage.removeItem('userInfo');
+            await AsyncStorage.removeItem('userToken');
+            await AsyncStorage.removeItem('groupId');
+            setUserInfo(null);
             setUserToken(null);
+            setGroupId(null);
             setIsLoading(false);
-        }).catch(e => {
+            showMessage({
+              message: "Logout Successful",
+              type: "success",
+              duration: 4000
+            });
+          } catch (e) {
             console.error(`Logout error:`, e);
             setIsLoading(false);
-        });
+            showMessage({
+              message: "Logout Error",
+              description: "There was a problem logging out. Please try again.",
+              type: "danger",
+              duration: 4000
+            });
+          }
     }
     
 
     const updateProfil = async (firstName, lastName, phone, email, job,  biography, website, linkedin, instagram, facebook, twitter, currentPassword, avatar) => {
-        setIsLoading(true);
-        console.log('Avatar reçu:', avatar); 
+        setIsLoading(true); 
         let formData = new FormData();
 
         // Ajoute les autres données
@@ -154,7 +174,7 @@ export const AuthProvider = ({ children }) => {
         }
         
         try {
-            const response = await axios.patch(`${BASE_URL}signup`, formData, {
+            const response = await api.patch(`/signup`, formData, {
                 headers: {
                     Authorization: `${userToken}`,
                     'Content-Type': 'multipart/form-data',
@@ -163,15 +183,13 @@ export const AuthProvider = ({ children }) => {
             });
         
             if (response && response.data) {
-                console.log("Réponse de l'API:", response.data.data);
-                console.log(userToken);
                 let userInfo = response.data.data;
                 await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
                 setUserInfo(userInfo);
-                showMessage({ type: 'success', message: 'Profil mis à jour avec succès' });
+                showMessage({ type: 'success', message: 'Profile updated successfully' });
             } else {
                 console.error('Réponse de mise à jour du profil invalide:', response);
-                setErrorMessage("Réponse de mise à jour du profil invalide");
+                setErrorMessage("Invalid profile update response");
                 showMessage({ type: 'error', message: 'Erreur de mise à jour' });
             }
         } catch (error) {
@@ -179,7 +197,7 @@ export const AuthProvider = ({ children }) => {
             console.error('Erreur lors de la mise à jour du profil:', error);
             showMessage({
                 message: "Update Failed",
-                description: "Une erreur s'est produite lors de la mise à jour du profil.",
+                description: "An error occurred while updating the profile.",
                 type: "error",
                 duration: 4000
             });
@@ -191,14 +209,13 @@ export const AuthProvider = ({ children }) => {
     const fetchContactGroup = async () => {
         if (userInfo && userToken) {
             try {
-                const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire`, {
+                const response = await api.get(`/users/${userInfo.id}/repertoire`, {
                     headers: { Authorization: userToken }
                 });
-                console.log('API response:', response.data);
                 const included = response.data.repertoire.included;
                 const contactGroup = included.find(group => group.type === 'contact_group' && group.attributes.name === 'Everyone');
                 if (contactGroup) {
-                    setgroupId(contactGroup.id);
+                    setGroupId(contactGroup.id);
                     await AsyncStorage.setItem('groupId', contactGroup.id);
                 } else {
                     console.error('Contact group "Everyone" not found');
@@ -219,7 +236,7 @@ export const AuthProvider = ({ children }) => {
             if(userInfo) {
                 setUserInfo(userInfo)
                 setUserToken(userToken)
-                setgroupId(groupId)
+                setGroupId(groupId)
             }
             await fetchContactGroup(); 
             setSplashLoading(false);

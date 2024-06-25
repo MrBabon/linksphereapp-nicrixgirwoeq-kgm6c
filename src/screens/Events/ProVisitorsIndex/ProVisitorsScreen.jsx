@@ -1,9 +1,7 @@
 import { TouchableOpacity, View, ScrollView } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext.js";
-import { BASE_URL } from "../../../config.js";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import api from "../../../config.js";
 import { TxtInria } from "../../../components/TxtInria/TxtInria";
 import { s } from "./ProVisitorsScreen.style";
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
@@ -48,7 +46,7 @@ const ProVisitorsScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}events/${eventId}/visitor`, {
+                    const response = await api.get(`/events/${eventId}/visitor`, {
                         headers: { Authorization: userToken }
                     });
 

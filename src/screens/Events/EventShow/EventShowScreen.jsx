@@ -1,7 +1,6 @@
-import axios from "axios";
 import { s } from "./EventShowScreen.style";
 import { useContext, useEffect, useState } from "react";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import { AuthContext } from "../../../context/AuthContext";
 import { TxtInria, TxtInriaBold, TxtInriaItalic } from "../../../components/TxtInria/TxtInria";
 import { Image, ScrollView, TextInput, TouchableOpacity, View, Linking } from "react-native";
@@ -15,7 +14,6 @@ import ChevronLeft from "../../../assets/icons/ChevronLeft";
 import Danger from "../../../assets/icons/Danger.js";
 import { ModalEvent } from "../../../components/Modal/ModalEvent/ModalEvent";
 import Checkbox from 'expo-checkbox';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModalDelete } from "../../../components/Modal/ModalDelete/ModalDelete";
 import { ModalVisiblePro } from "../../../components/Modal/ModalVisiblePro/ModalVisiblePro"
 
@@ -51,7 +49,7 @@ const EventShowScreen = ({ route, navigation }) => {
 
         const fetchEvent = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}events/${eventId}`, {
+                const response = await api.get(`/events/${eventId}`, {
                     headers: { Authorization: userToken }
                 });
                 const data = response.data.data
@@ -87,7 +85,7 @@ const EventShowScreen = ({ route, navigation }) => {
                 visible_in_participants: isChecked,
                 registration_code: registrationCode
             };
-            const response = await axios.post(`${BASE_URL}events/${eventId}/participations`, payload, {
+            const response = await api.post(`/events/${eventId}/participations`, payload, {
                 headers: { Authorization: userToken }
             });
             if (response.status === 201 && response.data && response.data.data) {
@@ -124,7 +122,7 @@ const EventShowScreen = ({ route, navigation }) => {
     // Suppression participation
     const destroyParticipation = async () => {
         try {
-            const response = await axios.delete(`${BASE_URL}events/${eventId}/participations/${participationId}`, {
+            const response = await api.delete(`/events/${eventId}/participations/${participationId}`, {
                 headers: { Authorization: userToken }
             });
     
@@ -164,7 +162,7 @@ const EventShowScreen = ({ route, navigation }) => {
             const payload = {
                 visible_in_participants: isChecked
             };
-            const response = await axios.patch(`${BASE_URL}events/${eventId}/participations/${participationId}`, payload, {
+            const response = await api.patch(`/events/${eventId}/participations/${participationId}`, payload, {
                 headers: { Authorization: userToken }
             });
             if (response.status === 200) {

@@ -6,15 +6,13 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import { ContactGroupsProvider } from "../../../context/ContactGroupsContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserSearch } from "../../../components/forms/UserSearch/UserSearch";
 import Avatar from "../../../assets/icons/Avatar";
 import { showMessage } from "react-native-flash-message";
 import { ModalContactGroup } from "../../../components/Modal/ModalContactGroup/ModalContactGroup";
-import { add } from "date-fns";
 import { useFocusEffect } from "@react-navigation/native";
 
 const RepertoireScreen = ({ navigation }) => {
@@ -36,7 +34,7 @@ const RepertoireScreen = ({ navigation }) => {
     }
     const fetchUsers = async (queryString) => {
         try {
-            const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire${queryString}`, {
+            const response = await api.get(`/users/${userInfo.id}/repertoire${queryString}`, {
                 headers: { Authorization: userToken }
             });
             let allUsers = response.data.users;
@@ -59,10 +57,9 @@ const RepertoireScreen = ({ navigation }) => {
             const payload = {
                 contact_group: { name: groupName }
             }
-            const response = await axios.post(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups`, payload, {
+            const response = await api.post(`/users/${userInfo.id}/repertoire/contact_groups`, payload, {
                 headers: { Authorization: userToken }
             });
-            console.log("response", response.data);
 
             if (response.status === 201 && response.data) {
                 setContactGroups(prevGroups => [...prevGroups, response.data]);
@@ -74,8 +71,6 @@ const RepertoireScreen = ({ navigation }) => {
                 });
                 setModalVisible(false);
             }
-
-        console.log("Groupe bien créé", response.data);
 
         }catch(e) {
             console.error(e);
@@ -125,7 +120,7 @@ const RepertoireScreen = ({ navigation }) => {
     const fetchData = async () => {
         try {
             if (userInfo && userToken) {
-                const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire`, {
+                const response = await api.get(`/users/${userInfo.id}/repertoire`, {
                     headers: {
                         'Authorization': userToken
                     }

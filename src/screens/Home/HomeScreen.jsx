@@ -3,19 +3,9 @@ import backgroundImg from '../../assets/images/background.jpg';
 import { TxtInria, TxtInriaBold } from "../../components/TxtInria/TxtInria";
 import { TxtJostSemiBold } from "../../components/TxtJost/TxtJost";
 import { View, ImageBackground, TouchableOpacity} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const HomeScreen = ({ navigation }) => {
-
-  const clearAsyncStorage = async () => {
-    try {
-        await AsyncStorage.clear();
-        alert('AsyncStorage has been cleared!');
-    } catch (e) {
-        alert('Failed to clear the async storage.');
-    }
-  };
 
   return (
     <>

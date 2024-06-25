@@ -7,8 +7,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import Header from "../../../components/Header/Header";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import Avatar from "../../../assets/icons/Avatar";
 import Phone from "../../../assets/icons/Phone";
 import Mail from "../../../assets/icons/Mail";
@@ -37,7 +36,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
     const fetchData = useCallback(async () => {
         try {
             if (userInfo && userToken) {
-                const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/${userId}`, {
+                const response = await api.get(`/users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/${userId}`, {
                     headers: {
                         'Authorization': userToken
                     }
@@ -75,7 +74,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
             const payload = {
                 contact_group: { name: groupName }
             };
-            const response = await axios.post(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups`, payload, {
+            const response = await api.post(`/users/${userInfo.id}/repertoire/contact_groups`, payload, {
                 headers: { Authorization: userToken }
             });
             console.log("Full response: => ",response.data);
@@ -105,7 +104,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
                 user_contact_group: { user_id: userId, contact_group_id: groupId, personal_note: personalNote }
             };
 
-            const response = await axios.post(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/add_to_group`, payload, {
+            const response = await api.post(`/users/${userInfo.id}/repertoire/contact_groups/${groupId}/user_contact_groups/add_to_group`, payload, {
                 headers: { Authorization: userToken }
             });
             if (response.status === 201 && response.data) {

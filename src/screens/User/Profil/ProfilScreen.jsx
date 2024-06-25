@@ -17,7 +17,7 @@ import Linkedin from "../../../assets/icons/Linkedin";
 import Facebook from "../../../assets/icons/Facebook";
 import Envelope from "../../../assets/icons/Envelope";
 import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -46,7 +46,7 @@ const ProfilScreen = ({ navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {          
-                    const response = await axios.get(`${BASE_URL}users/${userInfo.id}/profil`, {
+                    const response = await api.get(`/users/${userInfo.id}/profil`, {
                         headers: {
                             'Authorization': `${userToken}`
                         }

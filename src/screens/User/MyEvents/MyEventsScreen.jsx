@@ -6,8 +6,7 @@ import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJo
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import Spinner from "react-native-loading-spinner-overlay";
-import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import { format, parseISO } from "date-fns";
 import  MapPin from "../../../assets/icons/MapPin"
 import CalendarEvent from "../../../assets/icons/CalendarEvent"
@@ -35,7 +34,7 @@ const MyEventsScreen = ({ navigation }) => {
 
     const fetchMyEvents = async (queryString) => {
         try {
-            const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events${queryString}`, {
+            const response = await api.get(`/users/${userInfo.id}/my_events${queryString}`, {
               headers: { Authorization: userToken }
             });
             const eventsData = response.data.events;
@@ -79,7 +78,7 @@ const MyEventsScreen = ({ navigation }) => {
             }
         
         try {
-            const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events${queryString}`, {
+            const response = await api.get(`/users/${userInfo.id}/my_events${queryString}`, {
               headers: { Authorization: userToken }
             });
             const eventsData = response.data.events;
@@ -137,7 +136,7 @@ const MyEventsScreen = ({ navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}users/${userInfo.id}/my_events`, {
+                    const response = await api.get(`/users/${userInfo.id}/my_events`, {
                         headers: {
                             'Authorization': userToken
                         }

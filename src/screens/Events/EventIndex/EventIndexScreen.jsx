@@ -5,8 +5,7 @@ import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { BASE_URL } from "../../../config";
-import axios from "axios";
+import api from "../../../config";
 import { format, parseISO } from 'date-fns';
 import CalendarEvent from "../../../assets/icons/CalendarEvent";
 import MapPin from "../../../assets/icons/MapPin";
@@ -37,7 +36,7 @@ const EventIndexScreen = ({ navigation }) => {
     
     const fetchEvents = async (queryString) => {
         try {
-            const response = await axios.get(`${BASE_URL}events${queryString}`, {
+            const response = await api.get(`/events${queryString}`, {
               headers: { Authorization: userToken }
             });
             let allEvents = [];
@@ -74,7 +73,7 @@ const EventIndexScreen = ({ navigation }) => {
         
         console.log(queryString);
         try {
-            const response = await axios.get(`${BASE_URL}events${queryString}`, {
+            const response = await api.get(`/events${queryString}`, {
               headers: { Authorization: userToken }
             });
             let allEvents = [];
@@ -126,7 +125,7 @@ const EventIndexScreen = ({ navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}events`, {
+                    const response = await api.get(`/events`, {
                         headers: {
                             'Authorization': userToken
                         }

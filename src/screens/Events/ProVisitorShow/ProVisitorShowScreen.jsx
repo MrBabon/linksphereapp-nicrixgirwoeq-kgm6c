@@ -2,8 +2,7 @@ import { s } from "./ProVisitorShowScreen.style";
 import { useContext, useEffect, useState } from "react";
 import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
 import { AuthContext } from "../../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import Spinner from "react-native-loading-spinner-overlay";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
@@ -50,7 +49,7 @@ const ProVisitorShowScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}users/${userId}`, {
+                    const response = await api.get(`/users/${userId}`, {
                         headers: { Authorization: userToken }
                     });
                     const data = response.data;

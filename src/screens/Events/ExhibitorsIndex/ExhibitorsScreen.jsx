@@ -5,8 +5,7 @@ import ChevronLeft from "../../../assets/icons/ChevronLeft";
 import { TxtJost, TxtJostBold } from "../../../components/TxtJost/TxtJost";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import Spinner from "react-native-loading-spinner-overlay";
 import { ModalVisiblePro } from "../../../components/Modal/ModalVisiblePro/ModalVisiblePro";
 import Danger from "../../../assets/icons/Danger";
@@ -70,7 +69,7 @@ const ExhibitorsScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}events/${eventId}/exposant`, {
+                    const response = await api.get(`/events/${eventId}/exposant`, {
                         headers: { Authorization: userToken }
                     });
                     const data = response.data;
@@ -124,7 +123,7 @@ const ExhibitorsScreen = ({ route, navigation }) => {
             const payload = {
                 visible_in_participants: isChecked
             };
-            const response = await axios.patch(`${BASE_URL}events/${eventId}/participations/${participationId}`, payload, {
+            const response = await api.patch(`/events/${eventId}/participations/${participationId}`, payload, {
                 headers: { Authorization: userToken }
             });
             if (response.status === 200) {

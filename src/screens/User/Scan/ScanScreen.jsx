@@ -1,12 +1,11 @@
 import { s } from "./ScanScreen.style";
-import { Alert, Button, Image, Linking, ScrollView, ScrollViewBase, TouchableOpacity, View } from "react-native";
+import { Button, ScrollView, View } from "react-native";
 import { TxtInria } from "../../../components/TxtInria/TxtInria";
 import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import QRCode from 'react-native-qrcode-svg';
 import { CameraView, useCameraPermissions } from "expo-camera";
 
@@ -37,7 +36,7 @@ const ScanScreen = ({ navigation }) => {
     const fetchData = async () => {
         try {
             if (userInfo && userToken) {          
-                const response = await axios.get(`${BASE_URL}users/${userInfo.id}/profil`, {
+                const response = await api.get(`/users/${userInfo.id}/profil`, {
                     headers: {
                         'Authorization': `${userToken}`
                     }
@@ -67,7 +66,7 @@ const ScanScreen = ({ navigation }) => {
                     const payload = {
                         user_contact_group: { user_id: userId }
                     }
-                    const response = await axios.post(`${BASE_URL}users/${userInfo.id}/user_contact_groups`, payload, {
+                    const response = await api.post(`/users/${userInfo.id}/user_contact_groups`, payload, {
                             headers: { Authorization: userToken }
                         }
                     );

@@ -6,8 +6,7 @@ import { TxtJost, TxtJostBold, TxtJostSemiBold } from "../../../components/TxtJo
 import Spinner from "react-native-loading-spinner-overlay";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "../../../config";
+import api from "../../../config";
 import { Image } from "react-native";
 import Instagram from "../../../assets/icons/Instagram";
 import Twitter from "../../../assets/icons/Twitter";
@@ -78,7 +77,7 @@ const ExhibitorShowScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}events/${eventId}/exhibitors/${exhibitorId}`, {
+                    const response = await api.get(`/events/${eventId}/exhibitors/${exhibitorId}`, {
                         headers: { Authorization: userToken }
                     });
                     const data = response.data;
@@ -116,7 +115,7 @@ const ExhibitorShowScreen = ({ route, navigation }) => {
             const payload = {
                 visible_in_participants: isChecked
             };
-            const response = await axios.patch(`${BASE_URL}events/${eventId}/participations/${participationId}`, payload, {
+            const response = await api.patch(`/events/${eventId}/participations/${participationId}`, payload, {
                 headers: { Authorization: userToken }
             });
             if (response.status === 200) {

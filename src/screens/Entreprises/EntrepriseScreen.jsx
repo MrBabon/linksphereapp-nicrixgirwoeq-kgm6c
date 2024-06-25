@@ -49,7 +49,7 @@ const EntrepriseScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}entreprises/${entrepriseId}`, {
+                    const response = await api.get(`/entreprises/${entrepriseId}`, {
                         headers: { Authorization: userToken }
                     });
                     const data = response.data.data
