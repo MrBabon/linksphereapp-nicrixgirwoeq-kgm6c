@@ -1,14 +1,11 @@
 import { s } from "./ContactGroupScreen.style";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { TxtInria } from "../../../components/TxtInria/TxtInria"
-import ChevronLeft from "../../../assets/icons/ChevronLeft"
-import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
 import { UserSearch } from "../../../components/forms/UserSearch/UserSearch";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { BASE_URL } from "../../../config";
-import axios from "axios";
+import api from "../../../config";
 import Avatar from "../../../assets/icons/Avatar";
 import { showMessage } from "react-native-flash-message";
 import Garbage from "../../../assets/icons/Garbage";
@@ -56,7 +53,7 @@ const ContactGroupScreen = ({ route, navigation }) => {
         const fetchData = async () => {
             try {
                 if (userInfo && userToken) {
-                    const response = await axios.get(`${BASE_URL}users/${userInfo.id}/repertoire/contact_groups/${groupId}`, {
+                    const response = await api.get(`/users/${userInfo.id}/repertoire/contact_groups/${groupId}`, {
                         headers: {
                             'Authorization': userToken
                         }

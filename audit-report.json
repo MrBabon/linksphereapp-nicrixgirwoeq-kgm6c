@@ -1,0 +1,829 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@expo/cli": {
+      "name": "@expo/cli",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/dev-server",
+        "@expo/metro-config",
+        "@expo/prebuild-config",
+        "@expo/prebuild-config"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "range": "<=0.0.0-canary-20231123-1b19f96-4 || 0.0.1-canary-20231125-d600e44 - 0.18.0",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/@expo/cli",
+        "node_modules/xdl/node_modules/@expo/cli"
+      ],
+      "fixAvailable": true
+    },
+    "@expo/config": {
+      "name": "@expo/config",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@expo/config-plugins",
+        "semver"
+      ],
+      "effects": [
+        "@expo/cli",
+        "@expo/metro-config",
+        "@expo/prebuild-config",
+        "expo",
+        "expo-constants"
+      ],
+      "range": "3.3.23-alpha.0 - 8.1.0",
+      "nodes": [
+        "node_modules/@expo/dev-server/node_modules/@expo/config",
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/config",
+        "node_modules/expo-cli/node_modules/@expo/config",
+        "node_modules/expo-cli/node_modules/@expo/metro-config/node_modules/@expo/config",
+        "node_modules/expo-cli/node_modules/expo-asset/node_modules/@expo/config",
+        "node_modules/expo-cli/node_modules/expo-constants/node_modules/@expo/config",
+        "node_modules/expo-cli/node_modules/expo/node_modules/@expo/config",
+        "node_modules/xdl/node_modules/@expo/config"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    },
+    "@expo/config-plugins": {
+      "name": "@expo/config-plugins",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "xml2js"
+      ],
+      "effects": [
+        "@expo/config",
+        "expo",
+        "expo-cli",
+        "xdl"
+      ],
+      "range": "<=7.1.0",
+      "nodes": [
+        "node_modules/@expo/config-plugins",
+        "node_modules/@expo/dev-server/node_modules/@expo/config-plugins",
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/config-plugins",
+        "node_modules/expo-cli/node_modules/@expo/config-plugins",
+        "node_modules/expo-cli/node_modules/@expo/metro-config/node_modules/@expo/config/node_modules/@expo/config-plugins",
+        "node_modules/expo-cli/node_modules/expo-asset/node_modules/@expo/config-plugins",
+        "node_modules/expo-cli/node_modules/expo-constants/node_modules/@expo/config/node_modules/@expo/config-plugins",
+        "node_modules/expo-cli/node_modules/expo/node_modules/@expo/config-plugins",
+        "node_modules/xdl/node_modules/@expo/config-plugins"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "@expo/dev-server": {
+      "name": "@expo/dev-server",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@expo/metro-config",
+        "semver"
+      ],
+      "effects": [
+        "@expo/cli",
+        "expo-cli",
+        "xdl"
+      ],
+      "range": "0.1.49-alpha.0 - 0.5.0",
+      "nodes": [
+        "node_modules/@expo/dev-server",
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/dev-server"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    },
+    "@expo/image-utils": {
+      "name": "@expo/image-utils",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "semver"
+      ],
+      "effects": [
+        "@expo/prebuild-config",
+        "expo-pwa"
+      ],
+      "range": "<=0.0.1-canary-20240109-93608d8 || 0.3.10-alpha.0 - 0.4.2",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/image-utils",
+        "node_modules/expo-cli/node_modules/@expo/image-utils",
+        "node_modules/expo-pwa/node_modules/@expo/image-utils",
+        "node_modules/xdl/node_modules/@expo/image-utils",
+        "node_modules/xdl/node_modules/expo-pwa/node_modules/@expo/image-utils"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    },
+    "@expo/metro-config": {
+      "name": "@expo/metro-config",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@expo/config"
+      ],
+      "effects": [
+        "@expo/dev-server"
+      ],
+      "range": "0.1.49-alpha.0 - 0.9.0",
+      "nodes": [
+        "node_modules/@expo/dev-server/node_modules/@expo/metro-config",
+        "node_modules/expo-cli/node_modules/@expo/metro-config"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    },
+    "@expo/prebuild-config": {
+      "name": "@expo/prebuild-config",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/image-utils",
+        "semver",
+        "xml2js"
+      ],
+      "effects": [
+        "@expo/cli",
+        "expo-cli"
+      ],
+      "range": "<=7.0.0-beta.0",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/prebuild-config",
+        "node_modules/expo-cli/node_modules/@expo/prebuild-config",
+        "node_modules/xdl/node_modules/@expo/prebuild-config"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    },
+    "@expo/webpack-config": {
+      "name": "@expo/webpack-config",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "expo",
+        "expo",
+        "expo-pwa",
+        "semver"
+      ],
+      "effects": [],
+      "range": ">=0.12.53-alpha.0",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/@expo/webpack-config",
+        "node_modules/xdl/node_modules/@expo/webpack-config"
+      ],
+      "fixAvailable": true
+    },
+    "axios": {
+      "name": "axios",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1095000,
+          "name": "axios",
+          "dependency": "axios",
+          "title": "axios Inefficient Regular Expression Complexity vulnerability",
+          "url": "https://github.com/advisories/GHSA-cph5-m8f7-6c5x",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<0.21.2"
+        },
+        {
+          "source": 1097679,
+          "name": "axios",
+          "dependency": "axios",
+          "title": "Axios Cross-Site Request Forgery Vulnerability",
+          "url": "https://github.com/advisories/GHSA-wf5p-g6vw-rhxx",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-352"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=0.8.1 <0.28.0"
+        }
+      ],
+      "effects": [
+        "xdl"
+      ],
+      "range": "<=0.27.2",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/axios",
+        "node_modules/xdl/node_modules/axios"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "body-parser": {
+      "name": "body-parser",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "qs"
+      ],
+      "effects": [
+        "express"
+      ],
+      "range": "1.18.0 - 1.18.3",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/xdl/node_modules/body-parser",
+        "node_modules/xdl/node_modules/express/node_modules/body-parser"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "expo": {
+      "name": "expo",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@expo/cli",
+        "@expo/cli",
+        "@expo/config",
+        "@expo/config-plugins",
+        "expo-asset",
+        "expo-constants"
+      ],
+      "effects": [
+        "@expo/webpack-config"
+      ],
+      "range": "41.0.0-alpha.0 - 51.0.0-preview.14",
+      "nodes": [
+        "node_modules/expo",
+        "node_modules/expo-cli/node_modules/expo",
+        "node_modules/xdl/node_modules/expo"
+      ],
+      "fixAvailable": true
+    },
+    "expo-asset": {
+      "name": "expo-asset",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "expo-constants"
+      ],
+      "effects": [
+        "expo"
+      ],
+      "range": "8.6.1 - 8.9.2",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/expo-asset"
+      ],
+      "fixAvailable": true
+    },
+    "expo-cli": {
+      "name": "expo-cli",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/dev-server",
+        "@expo/prebuild-config",
+        "semver",
+        "xdl"
+      ],
+      "effects": [],
+      "range": ">=4.0.0",
+      "nodes": [
+        "node_modules/expo-cli"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    },
+    "expo-constants": {
+      "name": "expo-constants",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@expo/config"
+      ],
+      "effects": [
+        "expo",
+        "expo-asset"
+      ],
+      "range": "10.1.2 - 14.4.0",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/expo-asset/node_modules/expo-constants",
+        "node_modules/expo-cli/node_modules/expo-constants"
+      ],
+      "fixAvailable": true
+    },
+    "expo-pwa": {
+      "name": "expo-pwa",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@expo/image-utils"
+      ],
+      "effects": [
+        "@expo/webpack-config"
+      ],
+      "range": ">=0.0.59-alpha.0",
+      "nodes": [
+        "node_modules/expo-pwa",
+        "node_modules/xdl/node_modules/expo-pwa"
+      ],
+      "fixAvailable": true
+    },
+    "express": {
+      "name": "express",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096820,
+          "name": "express",
+          "dependency": "express",
+          "title": "Express.js Open Redirect in malformed URLs",
+          "url": "https://github.com/advisories/GHSA-rv95-896h-c2vc",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-601",
+            "CWE-1286"
+          ],
+          "cvss": {
+            "score": 6.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": "<4.19.2"
+        },
+        "body-parser",
+        "qs"
+      ],
+      "effects": [
+        "xdl"
+      ],
+      "range": "<=4.19.1 || 5.0.0-alpha.1 - 5.0.0-alpha.7",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/xdl/node_modules/express",
+        "node_modules/xdl/node_modules/express"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "got": {
+      "name": "got",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1088948,
+          "name": "got",
+          "dependency": "got",
+          "title": "Got allows a redirect to a UNIX socket",
+          "url": "https://github.com/advisories/GHSA-pfrx-2q88-qq97",
+          "severity": "moderate",
+          "cwe": [],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<11.8.5"
+        }
+      ],
+      "effects": [
+        "is-reachable",
+        "package-json"
+      ],
+      "range": "<11.8.5",
+      "nodes": [
+        "node_modules/is-reachable/node_modules/got",
+        "node_modules/package-json/node_modules/got"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "is-reachable": {
+      "name": "is-reachable",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "got"
+      ],
+      "effects": [],
+      "range": "2.0.0 - 4.0.0",
+      "nodes": [
+        "node_modules/is-reachable"
+      ],
+      "fixAvailable": true
+    },
+    "latest-version": {
+      "name": "latest-version",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "package-json"
+      ],
+      "effects": [
+        "xdl"
+      ],
+      "range": "0.2.0 - 5.1.0",
+      "nodes": [
+        "node_modules/latest-version"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "minimatch": {
+      "name": "minimatch",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096485,
+          "name": "minimatch",
+          "dependency": "minimatch",
+          "title": "minimatch ReDoS vulnerability",
+          "url": "https://github.com/advisories/GHSA-f8q6-p94x-37v3",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<3.0.5"
+        }
+      ],
+      "effects": [
+        "xdl"
+      ],
+      "range": "<3.0.5",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/minimatch",
+        "node_modules/xdl/node_modules/minimatch"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "node-forge": {
+      "name": "node-forge",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1088227,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "Prototype Pollution in node-forge debug API.",
+          "url": "https://github.com/advisories/GHSA-5rrq-pxf6-6jx5",
+          "severity": "low",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<1.0.0"
+        },
+        {
+          "source": 1088229,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "URL parsing in node-forge could lead to undesired behavior.",
+          "url": "https://github.com/advisories/GHSA-gf8q-jrpm-jvxq",
+          "severity": "low",
+          "cwe": [
+            "CWE-601"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<1.0.0"
+        },
+        {
+          "source": 1088746,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "Improper Verification of Cryptographic Signature in `node-forge`",
+          "url": "https://github.com/advisories/GHSA-2r2c-g63r-vccr",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<1.3.0"
+        },
+        {
+          "source": 1093719,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "Open Redirect in node-forge",
+          "url": "https://github.com/advisories/GHSA-8fr3-hfg3-gpgp",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-601"
+          ],
+          "cvss": {
+            "score": 6.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": "<1.0.0"
+        },
+        {
+          "source": 1095012,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "Improper Verification of Cryptographic Signature in node-forge",
+          "url": "https://github.com/advisories/GHSA-cfm4-qjh2-4765",
+          "severity": "high",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<1.3.0"
+        },
+        {
+          "source": 1095013,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "Improper Verification of Cryptographic Signature in node-forge",
+          "url": "https://github.com/advisories/GHSA-x4jg-mjrx-434g",
+          "severity": "high",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<1.3.0"
+        }
+      ],
+      "effects": [
+        "xdl"
+      ],
+      "range": "<=1.2.1",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/xdl/node_modules/node-forge",
+        "node_modules/xdl/node_modules/node-forge"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "package-json": {
+      "name": "package-json",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "got"
+      ],
+      "effects": [
+        "latest-version"
+      ],
+      "range": "<=6.5.0",
+      "nodes": [
+        "node_modules/package-json"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "qs": {
+      "name": "qs",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096470,
+          "name": "qs",
+          "dependency": "qs",
+          "title": "qs vulnerable to Prototype Pollution",
+          "url": "https://github.com/advisories/GHSA-hrpp-h998-j3pp",
+          "severity": "high",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=6.5.0 <6.5.3"
+        }
+      ],
+      "effects": [
+        "body-parser",
+        "express"
+      ],
+      "range": "6.5.0 - 6.5.2",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/qs",
+        "node_modules/xdl/node_modules/express/node_modules/qs"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "semver": {
+      "name": "semver",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096482,
+          "name": "semver",
+          "dependency": "semver",
+          "title": "semver vulnerable to Regular Expression Denial of Service",
+          "url": "https://github.com/advisories/GHSA-c2qf-rxjj-qqgw",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=7.0.0 <7.5.2"
+        }
+      ],
+      "effects": [
+        "@expo/config",
+        "@expo/dev-server",
+        "@expo/image-utils",
+        "@expo/prebuild-config",
+        "@expo/webpack-config",
+        "expo-cli",
+        "xdl"
+      ],
+      "range": "7.0.0 - 7.5.1",
+      "nodes": [
+        "node_modules/@expo/dev-server/node_modules/semver",
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/config/node_modules/semver",
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/dev-server/node_modules/semver",
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/image-utils/node_modules/semver",
+        "node_modules/expo-cli/node_modules/@expo/cli/node_modules/@expo/prebuild-config/node_modules/semver",
+        "node_modules/expo-cli/node_modules/semver",
+        "node_modules/xdl/node_modules/semver"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    },
+    "xdl": {
+      "name": "xdl",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/dev-server",
+        "@expo/webpack-config",
+        "axios",
+        "express",
+        "is-reachable",
+        "latest-version",
+        "minimatch",
+        "node-forge",
+        "package-json",
+        "semver"
+      ],
+      "effects": [
+        "expo-cli"
+      ],
+      "range": "42.0.0-alpha.0 - 42.0.0 || >=47.0.0",
+      "nodes": [
+        "node_modules/expo-cli/node_modules/xdl",
+        "node_modules/xdl"
+      ],
+      "fixAvailable": {
+        "name": "xdl",
+        "version": "53.7.4",
+        "isSemVerMajor": true
+      }
+    },
+    "xml2js": {
+      "name": "xml2js",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096693,
+          "name": "xml2js",
+          "dependency": "xml2js",
+          "title": "xml2js is vulnerable to prototype pollution",
+          "url": "https://github.com/advisories/GHSA-776f-qx25-q3cc",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": "<0.5.0"
+        }
+      ],
+      "effects": [
+        "@expo/config-plugins",
+        "@expo/prebuild-config"
+      ],
+      "range": "<0.5.0",
+      "nodes": [
+        "node_modules/@expo/dev-server/node_modules/xml2js",
+        "node_modules/expo-cli/node_modules/xml2js",
+        "node_modules/xdl/node_modules/xml2js"
+      ],
+      "fixAvailable": {
+        "name": "expo-cli",
+        "version": "4.0.17",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 19,
+      "high": 7,
+      "critical": 0,
+      "total": 26
+    },
+    "dependencies": {
+      "prod": 2008,
+      "dev": 0,
+      "optional": 12,
+      "peer": 234,
+      "peerOptional": 0,
+      "total": 2253
+    }
+  }
+}
