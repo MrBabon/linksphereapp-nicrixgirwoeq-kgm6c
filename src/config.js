@@ -29,15 +29,9 @@ export const setAuthInterceptor = (userToken) => {
             'Session expirée',
             'Votre session a expiré. Veuillez vous reconnecter.',
             [
-                {
-                    text: 'OK',
-                    onPress: () => {
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'Login' }],
-                        });
-                    }
-                }
+              {
+                  text: 'OK',
+              }
             ],
             { cancelable: false }
         );
