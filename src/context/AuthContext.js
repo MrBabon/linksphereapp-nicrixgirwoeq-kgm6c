@@ -16,10 +16,32 @@ export const AuthProvider = ({ children }) => {
     const [errorMessage, setErrorMessage] = useState("");
     
 
+    const isLoggedIn = async () => {
+        try {
+            setSplashLoading(true);
+            let userInfo = await AsyncStorage.getItem('userInfo');
+            let userToken = await AsyncStorage.getItem('userToken');
+            let groupId = await AsyncStorage.getItem('groupId');
+            userInfo = JSON.parse(userInfo);
+            if(userInfo) {
+                setUserInfo(userInfo)
+                setUserToken(userToken)
+                setGroupId(groupId)
+            }
+            await fetchContactGroup(); 
+            setSplashLoading(false);
+        } catch(e) {
+            setSplashLoading(false);
+            console.log(`Is logged in error ${e}`);
+        }
+    };
 
     useEffect(() => {
-        setAuthInterceptor(logout);
+        isLoggedIn().then(() => {
+            setAuthInterceptor(userToken);
+        });
     }, []);
+
 
     useEffect(() => {
         if (userInfo && userToken) {
@@ -237,29 +259,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
     
-    const isLoggedIn = async () => {
-        try {
-            setSplashLoading(true);
-            let userInfo = await AsyncStorage.getItem('userInfo');
-            let userToken = await AsyncStorage.getItem('userToken');
-            let groupId = await AsyncStorage.getItem('groupId');
-            userInfo = JSON.parse(userInfo);
-            if(userInfo) {
-                setUserInfo(userInfo)
-                setUserToken(userToken)
-                setGroupId(groupId)
-            }
-            await fetchContactGroup(); 
-            setSplashLoading(false);
-        } catch(e) {
-            setSplashLoading(false);
-            console.log(`Is logged in error ${e}`);
-        }
-    };
 
-    useEffect(() => {
-        isLoggedIn();
-    }, [])
 
     return (
         <AuthContext.Provider 

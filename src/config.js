@@ -12,7 +12,7 @@ const api = axios.create({
     baseURL: BASE_URL,
 }); 
 
-export const setAuthInterceptor = (logout) => {
+export const setAuthInterceptor = (userToken) => {
     api.interceptors.response.use(
       response => response,
       async error => {
@@ -23,9 +23,24 @@ export const setAuthInterceptor = (logout) => {
             // Si c'est une tentative de connexion, ne pas exécuter logout()
             return Promise.reject(error);
           }
+          console.warn("Session expirée ou non autorisée. Déconnexion de l'utilisateur.");
           await AsyncStorage.removeItem('userToken'); // Supprimez le token JWT
-          Alert.alert('Session expirée', 'Votre session a expiré. Veuillez vous reconnecter.');
-          logout();
+          Alert.alert(
+            'Session expirée',
+            'Votre session a expiré. Veuillez vous reconnecter.',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Login' }],
+                        });
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
         }
         return Promise.reject(error);
       }
