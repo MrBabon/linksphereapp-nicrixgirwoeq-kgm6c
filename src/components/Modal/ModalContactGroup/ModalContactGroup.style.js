@@ -9,11 +9,13 @@ export const s = StyleSheet.create({
       },
       modalView: {
         width: '80%',
-        // backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
         alignItems: 'center',
       },
+
+      
+
       input: {
         width: '100%',
         height: 40,
@@ -23,6 +25,7 @@ export const s = StyleSheet.create({
         paddingHorizontal: 10,
         marginBottom: 20,
         backgroundColor: '#F8F8F8',
+        textAlign: 'center',
       },
       button: {
         backgroundColor: '#FFC107',

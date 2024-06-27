@@ -24,6 +24,7 @@ export function ModalContactGroup({ isVisible, onClose, onConfirm }) {
                     <TextInput
                         style={s.input}
                         placeholder="NAME OF GROUP"
+                        placeholderTextColor={'#BDBDBD'}
                         value={groupName}
                         onChangeText={setGroupName}
                         onSubmitEditing={handleConfirm}
