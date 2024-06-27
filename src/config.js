@@ -12,7 +12,7 @@ const api = axios.create({
     baseURL: BASE_URL,
 }); 
 
-export const setAuthInterceptor = (userToken) => {
+export const setAuthInterceptor = () => {
     api.interceptors.response.use(
       response => response,
       async error => {
@@ -21,7 +21,8 @@ export const setAuthInterceptor = (userToken) => {
           // Vérifier si c'est une tentative de connexion
           if (originalRequest.url.includes('/login')) {
             // Si c'est une tentative de connexion, ne pas exécuter logout()
-            return Promise.reject(error);
+            console.error("Erreur de connexion: Identifiants incorrects. chut");
+            return Promise.reject({ ...error, isLoginError: true });
           }
           console.warn("Session expirée ou non autorisée. Déconnexion de l'utilisateur.");
           await AsyncStorage.removeItem('userToken'); // Supprimez le token JWT

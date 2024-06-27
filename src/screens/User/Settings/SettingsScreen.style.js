@@ -111,6 +111,10 @@ export const s = StyleSheet.create({
         shadowRadius: 3.84,
 
         elevation: 5,
+    },
+
+    switch: {
+        transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }],
     }
 
 })

@@ -32,7 +32,9 @@ export const AuthProvider = ({ children }) => {
             setSplashLoading(false);
         } catch(e) {
             setSplashLoading(false);
-            console.log(`Is logged in error ${e}`);
+            if (process.env.NODE_ENV === 'development') {
+                console.log(`Is logged in error ${e}`);
+            }
         }
     };
 
@@ -129,14 +131,29 @@ export const AuthProvider = ({ children }) => {
             });
         
         } catch(e) {
-            console.error(`Login error ${e}`);
-            setIsLoading(false);
-            showMessage({
-                message: "Login Error",
-                description: "Check your login details and try again.",
-                type: "danger",
-                duration: 4000
-            });
+            if (e.isLoginError) {
+                if (process.env.NODE_ENV === 'development') {
+                    console.error("Erreur de connexion: Identifiants incorrects.");
+                }
+                setIsLoading(false);
+                showMessage({
+                    message: "Login Error",
+                    description: "Check your login details and try again.",
+                    type: "danger",
+                    duration: 4000
+                });
+            } else {
+                if (process.env.NODE_ENV === 'development') {
+                    console.error(`Login error: ${e.message}`);
+                }
+                setIsLoading(false);
+                showMessage({
+                    message: "Login Error",
+                    description: e.message || "An unexpected error occurred. Please try again.",
+                    type: "danger",
+                    duration: 4000
+                });
+            }
         };
     }
 
@@ -239,6 +256,56 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updatePreferences = async (preferences) => {
+        if (!userInfo || !userToken) {
+            console.error('User not authenticated');
+            return;
+        }
+        try {
+            const response = await api.patch(`/users/${userInfo.id}/update_preferences`, {
+                user: {
+                    push_notifications: preferences.push_notifications,
+                    messages_from_contacts: preferences.messages_from_contacts,
+                    messages_from_everyone: preferences.messages_from_everyone
+                }
+            }, {
+                headers: {
+                    Authorization: `${userToken}`,
+                    'Content-Type': 'multipart/form-data',
+                    accept: 'application/json',
+                }
+            });
+            if (response.status === 200 || response.status === 204) {
+                const updatedUser = response.data.data.attributes;
+
+                setUserInfo(updatedUser);
+                await AsyncStorage.setItem('userInfo', JSON.stringify(updatedUser));
+                showMessage({
+                    message: 'Preferences updated successfully',
+                    type: 'success',
+                    duration: 4000
+                });  
+            } else {
+                const errorData = await response.json();
+                console.error('Error updating preferences:', errorData.errors);
+                showMessage({
+                    message: 'Error updating preferences',
+                    description: errorData.errors.join(', '),
+                    type: 'danger',
+                    duration: 4000
+                });
+            }
+        } catch (error) {
+            console.error('Error updating preferences:', error);
+            showMessage({
+                message: 'Error updating preferences',
+                description: error.message,
+                type: 'danger',
+                duration: 4000
+            });
+        }
+    }
+
     const fetchContactGroup = async () => {
         if (userInfo && userToken) {
             try {
@@ -274,7 +341,8 @@ export const AuthProvider = ({ children }) => {
                 register,
                 login,
                 logout,
-                updateProfil }}>
+                updateProfil,
+                updatePreferences }}>
             {children}
         </AuthContext.Provider>
     );

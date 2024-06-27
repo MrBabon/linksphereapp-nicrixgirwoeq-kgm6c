@@ -1,18 +1,41 @@
 import { s } from "./SettingsScreen.style";
 import Spinner from "react-native-loading-spinner-overlay";
 import { AuthContext } from "../../../context/AuthContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Settings from '../../../assets/icons/Settings';
 import ChevronLeft from "../../../assets/icons/ChevronLeft";
 import ChevronRight from "../../../assets/icons/ChevronRight";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, Switch, TouchableOpacity, View } from "react-native";
 import { TxtInria, TxtInriaBold } from "../../../components/TxtInria/TxtInria";
 import { TxtJost } from "../../../components/TxtJost/TxtJost";
 import DoorExit from "../../../assets/icons/Doorexit";
 
 
 const SettingsScreen = ({ navigation }) => {
-    const {userInfo, logout, isLoading} = useContext(AuthContext);
+    const {userInfo, logout, isLoading, updatePreferences} = useContext(AuthContext);
+    const [pushNotifications, setPushNotifications] = useState(userInfo.push_notifications);
+    const [messagesFromContacts, setMessagesFromContacts] = useState(userInfo.messages_from_contacts);
+    const [messagesFromEveryone, setMessagesFromEveryone] = useState(userInfo.messages_from_everyone);
+
+    const handleUpdatePreferences = (preference, value) => {
+        const updatedPreferences = {
+            ...userInfo,
+            [preference]: value
+        }
+        updatePreferences(updatedPreferences)
+            .then(() => {
+                // Mettre à jour les états locaux après la réussite de la mise à jour
+                if (preference === 'push_notifications') setPushNotifications(value);
+                if (preference === 'messages_from_contacts') setMessagesFromContacts(value);
+                if (preference === 'messages_from_everyone') setMessagesFromEveryone(value);
+            })
+            .catch((error) => {
+                console.error(`Error updating ${preference}:`, error);
+            });
+    };
+
+    
+    
 
     const settingButton = (
         <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
@@ -35,9 +58,6 @@ const SettingsScreen = ({ navigation }) => {
         </View>
     )
 
-
-
-
     return (
         <>
             <Spinner visible={isLoading}/>
@@ -56,12 +76,36 @@ const SettingsScreen = ({ navigation }) => {
                                 <ChevronRight />
                             </TouchableOpacity>
                             <TouchableOpacity style={s.btn}>
-                            <TxtInriaBold style={s.txt}>Add a payment method</TxtInriaBold>
-                            <TxtInriaBold style={{ marginBottom: 3, marginRight: 2 }}>+</TxtInriaBold>
+                                <TxtInriaBold style={s.txt}>Add a payment method</TxtInriaBold>
+                                <TxtInriaBold style={{ marginBottom: 3, marginRight: 2 }}>+</TxtInriaBold>
                             </TouchableOpacity>
+                            <View style={s.btn}>
+                                <TxtInriaBold style={s.txt}>Push notifications</TxtInriaBold>
+                                <Switch
+                                    value={pushNotifications}
+                                    onValueChange={(value) => handleUpdatePreferences('push_notifications', value)}
+                                    trackColor={{ false: '#767577', true: '#FFD115' }}
+                                    style={s.switch}/>
+                            </View>
+                            <View style={s.btn}>
+                                <TxtInriaBold style={s.txt}>Messages from contacts</TxtInriaBold>
+                                <Switch
+                                    value={messagesFromContacts}
+                                    onValueChange={(value) => handleUpdatePreferences('messages_from_contacts', value)}
+                                    trackColor={{ false: '#767577', true: '#FFD115' }}
+                                    style={s.switch}/>
+                            </View>
+                            <View style={s.btn}>
+                                <TxtInriaBold style={s.txt}>Messages from everyone</TxtInriaBold>
+                                <Switch
+                                    value={messagesFromEveryone}
+                                    onValueChange={(value) => handleUpdatePreferences('messages_from_everyone', value)}
+                                    trackColor={{ false: '#767577', true: '#FFD115' }}
+                                    style={s.switch}/>
+                            </View>
                             <TouchableOpacity style={s.btn}>
-                            <TxtInriaBold style={s.txt}>Push notifications</TxtInriaBold>
-                            <TxtInriaBold style={{ marginBottom: 3, marginRight: 2 }}>+</TxtInriaBold>
+                                <TxtInriaBold style={s.txt}>Push notifications</TxtInriaBold>
+                                <TxtInriaBold style={{ marginBottom: 3, marginRight: 2 }}>+</TxtInriaBold>
                             </TouchableOpacity>
                             <TouchableOpacity style={s.btn}>
                                 <TxtInriaBold style={s.txt}>Messages from contacts</TxtInriaBold>
