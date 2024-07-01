@@ -182,7 +182,7 @@ const UserContactGroupScreen = ({ route, navigation }) => {
             <ScrollView>
                 <View style={s.container}>
                     <View style={s.share}>
-                        <TouchableOpacity onPress={() => navigation.navigate("Profil")}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Share", {user: user})}>
                             <Share/>
                         </TouchableOpacity>
                     </View>

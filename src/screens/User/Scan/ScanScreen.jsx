@@ -55,7 +55,6 @@ const ScanScreen = ({ navigation }) => {
         fetchData();
     }, [userInfo, userToken]);
 
-    console.log(groupId);
     const handleBarCodeScanned = async ({ data }) => {
         setScanned(true);
         if (data.startsWith('http://') || data.startsWith('https://')) {

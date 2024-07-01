@@ -58,4 +58,8 @@ export const s = StyleSheet.create({
     nav_txt: {
         fontSize: 18
     },
+
+    placeholder: {
+        width: 24
+    }
 })

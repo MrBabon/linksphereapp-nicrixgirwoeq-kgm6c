@@ -100,8 +100,9 @@ export const s = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         backgroundColor: "#FFD115",
-        padding: 7,
-        borderRadius: 8,
+        paddingVertical: 7,
+        paddingHorizontal: 24,
+        borderRadius: 50,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

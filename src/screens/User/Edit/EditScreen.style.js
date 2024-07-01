@@ -100,4 +100,36 @@ export const s = StyleSheet.create({
 
         elevation: 5,
     },
+
+    log: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        backgroundColor: "#FFD115",
+        paddingVertical: 7,
+        paddingHorizontal: 24,
+        borderRadius: 50,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+    },
+
+    logtxt: {        
+        color: "#368FE6",
+        fontSize: 25,
+        marginLeft:3,
+        textTransform: "uppercase"
+    },
+
+    btn: {        
+        alignItems: "center",
+        marginBottom: 60,
+        marginTop: 20
+    }
  })

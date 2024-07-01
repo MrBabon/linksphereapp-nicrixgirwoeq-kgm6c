@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import api, { setAuthInterceptor } from '../config';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showMessage } from "react-native-flash-message";
@@ -15,6 +15,27 @@ export const AuthProvider = ({ children }) => {
     const [groupId, setGroupId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     
+    const fetchContactGroup = useCallback(async () => {
+        if (userInfo && userToken) {
+            try {
+                console.log('Je test le fetchContactGroup afin de validé si userToken et tout de même bien présent');
+                const response = await api.get(`/users/${userInfo.id}/repertoire`, {
+                    headers: { Authorization: userToken }
+                });
+                const included = response.data.repertoire.included;
+                const contactGroup = included.find(group => group.type === 'contact_group' && group.attributes.name === 'Everyone');
+                if (contactGroup) {
+                    setGroupId(contactGroup.id);
+                    await AsyncStorage.setItem('groupId', contactGroup.id);
+                } else {
+                    console.error('Contact group "Everyone" not found');
+                }
+            } catch (error) {
+                console.error('Error fetching contact group ID:', error);
+            }
+        }
+    }, [userInfo, userToken]);
+
 
     const isLoggedIn = async () => {
         try {
@@ -28,7 +49,6 @@ export const AuthProvider = ({ children }) => {
                 setUserToken(userToken)
                 setGroupId(groupId)
             }
-            await fetchContactGroup(); 
             setSplashLoading(false);
         } catch(e) {
             setSplashLoading(false);
@@ -40,9 +60,9 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         isLoggedIn().then(() => {
-            setAuthInterceptor(userToken);
+            setAuthInterceptor(userToken, setUserToken);
         });
-    }, []);
+    }, [userToken]);
 
 
     useEffect(() => {
@@ -175,7 +195,6 @@ export const AuthProvider = ({ children }) => {
               type: "success",
               duration: 4000
             });
-            navigation.navigate('Home');
         } catch (e) {
             console.error(`Logout error:`, e);
             setIsLoading(false);
@@ -306,25 +325,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const fetchContactGroup = async () => {
-        if (userInfo && userToken) {
-            try {
-                const response = await api.get(`/users/${userInfo.id}/repertoire`, {
-                    headers: { Authorization: userToken }
-                });
-                const included = response.data.repertoire.included;
-                const contactGroup = included.find(group => group.type === 'contact_group' && group.attributes.name === 'Everyone');
-                if (contactGroup) {
-                    setGroupId(contactGroup.id);
-                    await AsyncStorage.setItem('groupId', contactGroup.id);
-                } else {
-                    console.error('Contact group "Everyone" not found');
-                }
-            } catch (error) {
-                console.error('Error fetching contact group ID:', error);
-            }
-        }
-    }
+
     
 
 

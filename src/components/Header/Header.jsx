@@ -21,23 +21,27 @@ const Header = ({
     return (
         <View style={s.container_header}>
             <View style={s.header}>
-                {showBackButton && (
+                {showBackButton ? (
                     <TouchableOpacity onPress={onBackPress}>
                         <ChevronLeft/>
                     </TouchableOpacity>
+                ) : (
+                    <View style={s.placeholder} />
+                
                 )}
-                <View style={s.header_texts}>
+               <View style={s.header_texts}>
                     <TxtJost style={s.txtheader}>{title}</TxtJost>
                 </View>
-                {showChatroom && (
+                {showChatroom ? (
                     <TouchableOpacity onPress={onChatPress}>
                         <Send/>
                     </TouchableOpacity>
-                )}
-                {showDelete && (
+                ) : showDelete ? (
                     <TouchableOpacity onPress={onDeletePress}>
                         <Garbage/>
                     </TouchableOpacity>
+                ) : (
+                    <View style={s.placeholder} />
                 )}
             </View>
             {showTabs && (

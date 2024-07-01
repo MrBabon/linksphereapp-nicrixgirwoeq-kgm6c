@@ -19,7 +19,6 @@ const RepertoireScreen = ({ navigation }) => {
     const {userInfo, userToken, isLoading} = useContext(AuthContext);
     const [contactGroups, setContactGroups] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [searchActive, setSearchActive] = useState(false);
     const [users, setUsers] = useState([]);
 
     const onUserSearch = (userName) => {
@@ -120,6 +119,7 @@ const RepertoireScreen = ({ navigation }) => {
     const fetchData = async () => {
         try {
             if (userInfo && userToken) {
+
                 const response = await api.get(`/users/${userInfo.id}/repertoire`, {
                     headers: {
                         'Authorization': userToken
