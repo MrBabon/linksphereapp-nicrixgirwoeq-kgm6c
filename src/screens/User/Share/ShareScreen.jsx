@@ -1,22 +1,32 @@
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import Header from "../../../components/Header/Header";
 import { useCallback, useContext, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import api from "../../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { TxtInria } from "../../../components/TxtInria/TxtInria";
+import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtInria/TxtInria";
 import { s } from "./ShareScreen.style";
 import Avatar from "../../../assets/icons/Avatar";
+import { UserSearch } from "../../../components/forms/UserSearch/UserSearch";
 
 
 const ShareScreen = ({ route, navigation }) => {
-    const { user } = route.params;
+    const { userShare } = route.params;
     const {userInfo, userToken, isLoading} = useContext(AuthContext);
     const [users, setUsers] = useState([]);
-    const [contactGroups, setContactGroups] = useState([]);
+    const [searchedUsers, setSearchedUsers] = useState([]);
 
-
+    const onUserSearch = (userName) => {
+        if (userName) {
+            const queryString = `?search=${userName}`
+            fetchUsers(queryString);
+            console.log(queryString);
+        } else {
+            console.log("User pas trouvé");
+            fetchUsers('');
+        }
+    }
     const fetchUsers = async (queryString) => {
         try {
             const response = await api.get(`/users/${userInfo.id}/repertoire${queryString}`, {
@@ -24,14 +34,17 @@ const ShareScreen = ({ route, navigation }) => {
             });
             let allUsers = response.data.users;
 
-            const user = allUsers.filter(item => item.type === 'user').map(user => ({
+            const users = allUsers.filter(item => item.type === 'user').map(user => ({
                 id: user.id,
                 first_name: user.attributes.first_name,
                 last_name: user.attributes.last_name,
                 avatar_url: user.attributes.avatar_url
-            }))
-            console.log("resultat",user);
-            setUsers(user);
+            }));
+
+            // Exclure l'utilisateur avec lequel vous partagez
+            const filteredUsers = users.filter(user => String(user.id) !== String(userShare.id));
+
+            setSearchedUsers(filteredUsers);
         
         } catch (e) {
             console.error(e);
@@ -47,34 +60,14 @@ const ShareScreen = ({ route, navigation }) => {
                         'Authorization': userToken
                     }
                 });
-                const data = response.data.repertoire.data;
                 const included = response.data.repertoire.included;
 
-                const usersMap = new Map();
-                const userContactGroupsMap = new Map();
-                included.filter(item => item.type === 'user').forEach(user => {
-                    usersMap.set(user.id, {
-                        id: user.id,
-                        ...user.attributes
-                    });
-                });
-                
-                included.filter(item => item.type === 'user_contact_group').forEach(ucg => {
-                    if (!userContactGroupsMap.has(ucg.attributes.contact_group_id)) {
-                        userContactGroupsMap.set(ucg.attributes.contact_group_id, []);
-                    }
-                    userContactGroupsMap.get(ucg.attributes.contact_group_id).push(usersMap.get(ucg.attributes.user_id));
-                });
-
-                const fetchedGroups = included.filter(item => item.type === 'contact_group').map(group => ({
-                    id: group.id,
-                    name: group.attributes.name,
-                    userCount: group.attributes.user_count,
-                    users: userContactGroupsMap.get(group.id) || []
+                const users = included.filter(item => item.type === 'user').map(user => ({
+                    ...user.attributes,
                 }));
-                 
-                setContactGroups(fetchedGroups);
-                await AsyncStorage.setItem('contactGroups', JSON.stringify(fetchedGroups));
+
+                setUsers(users);
+
             }
         } catch (error) {
             console.log(error);
@@ -87,21 +80,47 @@ const ShareScreen = ({ route, navigation }) => {
         }, [userInfo.id, userToken])
     );
 
+    const renderUsers = (usersList) => {
+        return usersList
+            .filter(user => user.id !== userShare.id)
+            .map(user => (
+                <TouchableOpacity key={`user-${user.id}`} onPress={() => navigation.navigate("UserContactGroup", { userId: user.id })}>
+                    <View style={s.contactGroup}>
+                        <TxtInria>{user.first_name} {user.last_name}</TxtInria>
+                        <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
+                    </View>
+                    <View style={s.border}></View>
+                </TouchableOpacity>
+            ));
+    };
+
     return (
         <>
             <Header
                 title={"Share with"}
                 showBackButton={true}
                 onBackPress={() => navigation.goBack()}
-            />
-            <ScrollView>
+            >
                 <View style={s.container}>
-                    <View>
-                        <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url}/>
+                    <View style={s.contactShare}>
+                        <View>
+                            <Avatar uri={userShare.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url}/>
+                        </View>
+                        <View style={s.info}>
+                            <TxtInriaBold style={s.userName}>{userShare.first_name} {userShare.last_name}</TxtInriaBold>
+                            <View style={s.detailTxt}>
+                                <TxtInriaLight style={s.job}>{userShare.job ? userShare.job : "Job not specified"}</TxtInriaLight>
+                                <TxtInriaLight style={s.industry}>{userShare.industry ? userShare.industry : "Industry not specified"}</TxtInriaLight>
+                            </View>
+                        </View>
                     </View>
-                    <TxtInria>{user.first_name} {user.last_name}</TxtInria>
                 </View>
-
+                <UserSearch onUserSearch={onUserSearch}/>
+            </Header>
+            <ScrollView>
+                <View>
+                    {searchedUsers.length > 0 ? renderUsers(searchedUsers) : renderUsers(users)}
+                </View>
             </ScrollView>
         </>
     )
