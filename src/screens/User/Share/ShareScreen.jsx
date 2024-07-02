@@ -9,6 +9,9 @@ import { TxtInria, TxtInriaBold, TxtInriaLight } from "../../../components/TxtIn
 import { s } from "./ShareScreen.style";
 import Avatar from "../../../assets/icons/Avatar";
 import { UserSearch } from "../../../components/forms/UserSearch/UserSearch";
+import { ModalShare } from "../../../components/Modal/ModalShare/ModalShare";
+import ChevronLeft from "../../../assets/icons/ChevronLeft";
+import { TxtJostBold } from "../../../components/TxtJost/TxtJost";
 
 
 const ShareScreen = ({ route, navigation }) => {
@@ -16,6 +19,7 @@ const ShareScreen = ({ route, navigation }) => {
     const {userInfo, userToken, isLoading} = useContext(AuthContext);
     const [users, setUsers] = useState([]);
     const [searchedUsers, setSearchedUsers] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const onUserSearch = (userName) => {
         if (userName) {
@@ -84,13 +88,27 @@ const ShareScreen = ({ route, navigation }) => {
         return usersList
             .filter(user => user.id !== userShare.id)
             .map(user => (
-                <TouchableOpacity key={`user-${user.id}`} onPress={() => navigation.navigate("UserContactGroup", { userId: user.id })}>
-                    <View style={s.contactGroup}>
-                        <TxtInria>{user.first_name} {user.last_name}</TxtInria>
-                        <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
-                    </View>
-                    <View style={s.border}></View>
-                </TouchableOpacity>
+                <>
+                    <TouchableOpacity key={`user-${user.id}`} onPress={() => setModalVisible(true)}>
+                        <View style={s.contactGroup}>
+                            <TxtInria>{user.first_name} {user.last_name}</TxtInria>
+                            <Avatar uri={user.avatar_url} style={s.avatar_url} svgStyle={s.avatar_url} />
+                        </View>
+                        <View style={s.border}></View>
+                    </TouchableOpacity>
+                    <ModalShare isVisible={modalVisible} onClose={() => setModalVisible(false)}>
+                        <TxtInria style={s.txt}>
+                            You would like to share {userShare.first_name} {userShare.last_name}’s profil with your contact Billy Winters. 
+                        </TxtInria>
+                        <TxtInria style={s.txt}>
+                            A notification will be sent à Rachel Monroe for confirmation.
+                        </TxtInria>
+                        <TouchableOpacity style={s.btnConfirm}>
+                            <TxtJostBold style={s.send}>Send</TxtJostBold>
+                        </TouchableOpacity>
+
+                    </ModalShare>
+                </>
             ));
     };
 

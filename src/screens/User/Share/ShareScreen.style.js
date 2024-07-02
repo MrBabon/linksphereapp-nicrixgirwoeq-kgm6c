@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Send from "../../../assets/icons/Send";
 
 
 export const s = StyleSheet.create({
@@ -42,5 +43,47 @@ export const s = StyleSheet.create({
     userName: {
         fontSize: 18,
         color: "#3A3A3A",
+    },
+
+    contactGroup: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        paddingHorizontal: 25,
+        marginVertical: 20,
+    },
+    
+    border: {
+        height: 0.5,
+        backgroundColor: "#cacaca7b"
+    },
+
+    // MODAL
+
+    closeButton: {
+        alignItems: "flex-start",
+        
+    },
+
+    txt: {
+        color: "#ffffff",
+        fontSize: 18,
+        marginVertical: 10,
+    },
+
+    btnConfirm: {
+        backgroundColor: "#FBD160",
+        paddingHorizontal: 28,
+        paddingVertical: 5,
+        borderRadius: 50,
+        marginTop: 10,
+        marginBottom: 20,
+    },
+
+    send: {
+        color: "#7F95E4",
+        fontSize: 20,
+        textTransform: "uppercase",
     },
 });

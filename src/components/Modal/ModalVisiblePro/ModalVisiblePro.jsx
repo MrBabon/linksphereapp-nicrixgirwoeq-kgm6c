@@ -1,5 +1,4 @@
 import { Modal, TouchableOpacity, View } from "react-native";
-import { TxtInria } from "../../TxtInria/TxtInria";
 import { s } from "./ModalVisiblePro.style"
 import Close from "../../../assets/icons/Close";
 

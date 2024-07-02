@@ -1,7 +1,5 @@
-import { Modal, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, TextInput, TouchableOpacity } from "react-native";
 import { s } from "./ModalContactGroup.style"
-import Close from "../../../assets/icons/Close";
-import { TxtJostBold } from "../../TxtJost/TxtJost";
 import { useState } from "react";
 
 
