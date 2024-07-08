@@ -32,9 +32,7 @@ export const s = StyleSheet.create({
         color: "#F4F4F4"
     },
 
-    viewBanner: {
-        marginTop: 110
-    },
+
 
     banner: {
         height: 120,

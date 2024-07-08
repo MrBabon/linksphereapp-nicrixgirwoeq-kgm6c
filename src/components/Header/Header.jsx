@@ -4,6 +4,7 @@ import ChevronLeft from "../../assets/icons/ChevronLeft";
 import { TxtJost, TxtJostBold } from "../TxtJost/TxtJost";
 import Send from "../../assets/icons/Send";
 import Garbage from "../../assets/icons/Garbage";
+import PlusCircle from "../../assets/icons/PlusCircle.js";
 
 const Header = ({
     title,
@@ -11,6 +12,8 @@ const Header = ({
     showBackButton,
     showChatroom,
     onChatPress,
+    showAddEntreprise,
+    onAddEntreprisePress,
     showDelete,
     onDeletePress,
     showTabs,
@@ -39,6 +42,10 @@ const Header = ({
                 ) : showDelete ? (
                     <TouchableOpacity onPress={onDeletePress}>
                         <Garbage/>
+                    </TouchableOpacity>
+                ) : showAddEntreprise ? (
+                    <TouchableOpacity onPress={onAddEntreprisePress}>
+                        <PlusCircle/>
                     </TouchableOpacity>
                 ) : (
                     <View style={s.placeholder} />

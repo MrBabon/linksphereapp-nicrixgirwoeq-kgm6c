@@ -107,7 +107,7 @@ const RepertoireScreen = ({ navigation }) => {
                         <TxtJostBold style={s.nav_txt_active}>My Cards</TxtJostBold>
                         <View style={s.underline}></View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('MyEvents')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('EntrepriseContact')}>
                         <TxtJost style={s.nav_txt}>Entreprises</TxtJost>
                     </TouchableOpacity>
                 </View>

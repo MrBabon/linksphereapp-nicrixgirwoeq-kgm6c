@@ -4,46 +4,27 @@ import { s } from "./EntrepriseScreen.style";
 import { AuthContext } from "../../context/AuthContext";
 import api from "../../config";
 import { ScrollView, TouchableOpacity, View, Image } from "react-native";
-import ChevronLeft from "../../assets/icons/ChevronLeft";
 import Spinner from "react-native-loading-spinner-overlay";
 import { TxtJost, TxtJostBold } from "../../components/TxtJost/TxtJost";
-import PlusCircle from "../../assets/icons/PlusCircle";
+import Header from "../../components/Header/Header";
 
 const EntrepriseScreen = ({ route, navigation }) => {
     const { entrepriseId } = route.params;
     const { userInfo, userToken } = useContext(AuthContext);
     const [entreprise, setEntreprise] = useState({})
 
-    const backbutton = (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeft/>
-        </TouchableOpacity>
-    )
-    const plusButton = (
-        <TouchableOpacity>
-            <PlusCircle/>
-        </TouchableOpacity>
-    )
-    const header = (
-        <View style={s.container_header}>
-            <View style={s.header}>
-                {backbutton}
-                <View style={s.header_texts}>
-                    <TxtJost style={s.txtheader}>Entreprise</TxtJost>
-                </View>
-                {plusButton}
-            </View>
-            <View style={s.viewBanner}>
-                <Image source={{uri: entreprise.banner_url}} style={s.banner}  onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
-                <View style={s.standView}>
-                        <TouchableOpacity style={s.btnsend}>
-                            <TxtInria style={s.send}>Send us your details</TxtInria>
-                        </TouchableOpacity>
-                </View>
-            </View>
-        </View>
-    )
-    
+    const addEntreprise = async() => {
+        try {
+            const response = await api.post(`/entreprises/${entrepriseId}/add_to_repertoire`, {}, {
+                headers: { Authorization: userToken }
+            });
+            const data = response.data.data;
+            console.log(data)
+        } catch(e) {
+            console.log(e)
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -64,7 +45,21 @@ const EntrepriseScreen = ({ route, navigation }) => {
     return (
         <>
             <Spinner/>
-            {header}
+            <Header
+                title="Entreprise"
+                showBackButton={true}
+                onBackPress={() => navigation.goBack()}
+                showAddEntreprise={true}
+                onAddEntreprisePress={() => addEntreprise()}>
+                <View style={s.viewBanner}>
+                    <Image source={{uri: entreprise.banner_url}} style={s.banner}  onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
+                    <View style={s.standView}>
+                            <TouchableOpacity style={s.btnsend}>
+                                <TxtInria style={s.send}>Send us your details</TxtInria>
+                            </TouchableOpacity>
+                    </View>
+                </View>
+            </Header>
             <ScrollView>
                 <View style={s.container}>
                     <TxtJostBold style={s.name}>{entreprise.name}</TxtJostBold>
