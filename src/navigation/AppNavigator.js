@@ -27,6 +27,7 @@ import ChatroomIndexScreen from '../screens/User/Chatroom/ChatroomIndex/Chatroom
 import ChatroomShowScreen from '../screens/User/Chatroom/ChatroomShow/ChatroomShowScreen.jsx';
 import ShareScreen from '../screens/User/Share/ShareScreen.jsx';
 import EntrepriseContactScreen from '../screens/User/Repertoire/EntrepriseContact/EntrepriseContactScreen.jsx';
+import EntrepriseContactShowScreen from '../screens/User/EntrepriseContactShow/EntrepriseContactShow.jsx';
 
 const Stack = createStackNavigator();
 
@@ -75,6 +76,7 @@ const AppNavigator = () => {
                                 <Stack.Screen name="Edit" component={EditScreen} />
                                 <Stack.Screen name="Repertoire" component={RepertoireScreen} />
                                 <Stack.Screen name="EntrepriseContact" component={EntrepriseContactScreen} />
+                                <Stack.Screen name="EntrepriseContactShow" component={EntrepriseContactShowScreen} />
                                 <Stack.Screen name="ContactGroup" component={ContactGroupScreen} />
                                 <Stack.Screen name="UserContactGroup" component={UserContactGroupScreen} />
                                 <Stack.Screen name="Share" component={ShareScreen}/>

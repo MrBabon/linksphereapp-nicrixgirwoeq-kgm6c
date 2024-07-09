@@ -38,7 +38,7 @@ const Footer = ({ activePage, navigation }) => {
                                 style={activePage === 'Repertoire' ? s.activeBtn : s.btn}
                                 onPress={() => {navigation.navigate('Repertoire')}}>
                             <List  color={activePage === 'Repertoire' ? '#1AC1B9' : '#3A3A3A'} />
-                            <TxtInria style={activePage === 'Repertoire' ? s.activeTxt : s.txt}>Groups</TxtInria>
+                            <TxtInria style={activePage === 'Repertoire' ? s.activeTxt : s.txt}>Directory</TxtInria>
                         </TouchableOpacity>
                         <TouchableOpacity 
                             style={activePage === 'ChatroomIndex' ? s.activeBtn : s.btn}

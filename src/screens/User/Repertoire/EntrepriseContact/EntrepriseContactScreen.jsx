@@ -1,13 +1,14 @@
 import { s } from "./EntrepriseContactScreen.style";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../context/AuthContext";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Header from "../../../../components/Header/Header";
 import { TxtJost, TxtJostBold } from "../../../../components/TxtJost/TxtJost";
 import Spinner from "react-native-loading-spinner-overlay";
 import { EntrepriseSearch } from "../../../../components/forms/EntrepriseSearch/EntrepriseSearch";
 import api from "../../../../config";
 import { set } from "date-fns";
+import { TxtInria, TxtInriaItalic } from "../../../../components/TxtInria/TxtInria";
 
 const EntrepriseContactScreen = ({ navigation }) => {
     const {userInfo, userToken} = useContext(AuthContext);
@@ -77,17 +78,32 @@ const EntrepriseContactScreen = ({ navigation }) => {
             </View>
         </Header>
         <ScrollView>
-            <View>
+            <View style={s.container}>
                 {entreprisesSearch.length > 0 ? (
                     entreprisesSearch.map(entreprise => (
                         <View key={entreprise.id}>
-                            <Text>{entreprise.name}</Text>
+                            <TouchableOpacity style={s.entreprise} onPress={() => navigation.navigate("EntrepriseContactShow", {entrepriseId: entreprise.id})}>
+                                <View>
+                                    <TxtInria>{entreprise.name}</TxtInria>
+                                    <TxtInriaItalic>{entreprise.headline}</TxtInriaItalic>
+                                </View>
+                                <Image source={{ uri: entreprise.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
+                            </TouchableOpacity>
+                            <View style={s.border}></View>
                         </View>
                     ))
                 ) : (
                     entreprises.map(entreprise => (
                         <View key={entreprise.id}>
-                            <Text>{entreprise.name}</Text>
+                            <TouchableOpacity style={s.entreprise} onPress={() => navigation.navigate("EntrepriseContactShow", {entrepriseId: entreprise.id})}>
+                                <View>
+                                    <TxtInria>{entreprise.name}</TxtInria>
+                                    <TxtInriaItalic>{entreprise.headline}</TxtInriaItalic>
+                                </View>
+                                <Image source={{ uri: entreprise.logo_url }} style={s.logo} onError={(e) => console.log('Error loading image:', e.nativeEvent.error)} />
+                            </TouchableOpacity>
+                            <View style={s.border}></View>
+
                         </View>
                     ))
                 )

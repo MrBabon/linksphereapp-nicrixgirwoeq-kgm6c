@@ -31,4 +31,30 @@ export const s = StyleSheet.create({
     nav_txt: {
         fontSize: 18
     },
+
+    // BODY
+
+    container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    entreprise: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        paddingHorizontal: 25,
+        marginVertical: 20
+    },
+
+    border: {
+        height: 0.5,
+        backgroundColor: "#cacaca7b"
+    },
+
+    logo: {
+        width: 50,
+        height: 50
+    },
 });
